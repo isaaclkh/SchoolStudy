@@ -18,8 +18,8 @@ public class Supplier {
 			System.out.println ("Enter number of glasses of milk:");
 			int milkCount = keyboard.nextInt ();
 			if (milkCount < 1) {
-				keyboard.close(); // Exception means stopping the rest of statements!! 
-				throw new Exception ("Exception: No milk!");
+				keyboard.close(); 
+				throw new Exception ("Exception: No milk!"); // Throwing exception stops the rest of statements!! 
 			}
 			double donutsPerGlass = donutCount / (double) milkCount;
 			System.out.println (donutCount + " donuts.");
