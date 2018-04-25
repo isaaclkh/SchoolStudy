@@ -4,11 +4,11 @@ public class DivideByZeroException extends Exception {
 
 	public DivideByZeroException ()
 	{
-		super ("Dividing by Zero!");
+		super("edu.handong.csee.java.exception.examples.dividebyzero.DivideByZeroException occured!");
 	}
 
 	public DivideByZeroException (String message)
 	{
-		super (message);
+		super(message);
 	}
 }
