@@ -22,7 +22,8 @@ public class DivideByZeroDemo {
 				throw new DivideByZeroException();
 			quotient = numerator / (double)denominator;            
 			System.out.println(numerator + "/" + denominator + " = " + quotient);        
-		} catch(DivideByZeroException e) {            
+		}
+		catch(DivideByZeroException e) {            
 			System.out.println(e.getMessage());            
 			giveSecondChance();        
 		}        
