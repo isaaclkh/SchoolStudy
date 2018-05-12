@@ -7,7 +7,6 @@ public class HashSetDemo {
 	public static void main(String[] args) {
 		HashSetDemo demonstrator = new HashSetDemo();
 		demonstrator.run();
-
 	}
 
 	private void run() {
@@ -16,9 +15,13 @@ public class HashSetDemo {
 		integers.add(7);
 		integers.add(7);
 		integers.add(3);
-		
 		printSet(integers);
 		
+		integers.remove(3);
+		printSet(integers);
+		
+		System.out.println("Set contains 2: " + integers.contains(2));
+		System.out.println("Set contains 3: " + integers.contains(3));
 		
 	}
 
@@ -27,7 +30,5 @@ public class HashSetDemo {
 		for(Integer integer: integers) {
 			System.out.println(integer);
 		}
-		
 	}
-
 }
