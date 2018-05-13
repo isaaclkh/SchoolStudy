@@ -55,6 +55,18 @@ private ListNode head;
 		return position;
 	}
 	
+	public String[] toArray() {
+		String[] anArray = new String[length()];
+		ListNode position = head;
+		int i= 0;
+		while(position != null) {
+			anArray[i] = position.data;
+			i++;
+			position = position.link;
+		}
+		return anArray;
+	}
+	
 	private class ListNode{
 		private String data;
 		private ListNode link;
