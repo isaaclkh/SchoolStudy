@@ -19,7 +19,7 @@ public class LinkedListDemo {
 		if(list.onList("Three"))
 			System.out.println("Three is on list");
 		else
-			System.out.println("Three is MOT on list");
+			System.out.println("Three is NOT on list");
 		
 		list.deleteHeadNode();
 		list.deleteHeadNode();

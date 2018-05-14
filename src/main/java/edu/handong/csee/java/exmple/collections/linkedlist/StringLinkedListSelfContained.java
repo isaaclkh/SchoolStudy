@@ -1,7 +1,17 @@
 package edu.handong.csee.java.exmple.collections.linkedlist;
 
 public class StringLinkedListSelfContained {
-private ListNode head;
+	private ListNode head;
+	
+	private class ListNode{
+		private String data;
+		private ListNode link;
+		
+		public ListNode(String newData, ListNode linkedNode) {
+			data = newData;
+			link = linkedNode;
+		}
+	}
 	
 	public StringLinkedListSelfContained() {
 		head = null;
@@ -65,15 +75,5 @@ private ListNode head;
 			position = position.link;
 		}
 		return anArray;
-	}
-	
-	private class ListNode{
-		private String data;
-		private ListNode link;
-		
-		public ListNode(String newData, ListNode linkedNode) {
-			data = newData;
-			link = linkedNode;
-		}
 	}
 }

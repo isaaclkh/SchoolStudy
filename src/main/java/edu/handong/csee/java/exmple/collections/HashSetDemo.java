@@ -15,6 +15,9 @@ public class HashSetDemo {
 		integers.add(7);
 		integers.add(7);
 		integers.add(3);
+		integers.add(31);
+		integers.add(300);
+		integers.add(1);
 		printSet(integers);
 		
 		integers.remove(3);
