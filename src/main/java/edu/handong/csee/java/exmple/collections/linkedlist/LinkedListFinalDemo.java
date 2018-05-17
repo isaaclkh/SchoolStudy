@@ -19,6 +19,8 @@ public class LinkedListFinalDemo {
 			numberList.addANodeToStart(i);
 		}
 		numberList.deleteHeadNode();
+		numberList.deleteTailNode();
+		numberList.addANodeToTail(3);
 		numberList.showList();
 	}
 }
