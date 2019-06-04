@@ -31,7 +31,7 @@ class ChatThread extends Thread{
 	private BufferedReader br; // BufferedReader 클래스 변수
 	private HashMap hm; // HashMap 클래스 변수
 	private boolean initFlag = false; // boolean 변수 (초기값으로 false)
-	//LinkedList<String> spam = new LinkedList<String>();
+	LinkedList<String> spam = new LinkedList<String>(); // 금지어들 저장
 	
 	// Constructor (socket값과 hashmap 값을 가지고 와서 초기화)
 	public ChatThread(Socket sock, HashMap hm){
@@ -64,43 +64,50 @@ class ChatThread extends Thread{
 	public void run(){ // run 메소드
 		try{
 			String line = null; // String 변수 line
-			int result = 0;
+			int result;
+			int add;
+			
+			//금지어들
+			spam.add("hate");
+			spam.add("never");
+			spam.add("no!");
+			spam.add("disgusting");
+			spam.add("dead");
 			
 			while((line = br.readLine()) != null){ // line에 값이 있을 때(버퍼드에 입력받은 한줄을 line에 저장함) 
+				result = 0;
+				add=0;
+				
 				if(line.equals("/quit")) // 만약에 line 즉 버퍼에 입력받은 String이 '/quit' 와 같다면 
 					break; // while문을 빠져나옴(즉 종료)
 				
-				else if(line.equals("/userlist")) {
+				if(line.equals("/userlist")) {
 					send_userlist();
 				}
-				else if(line.indexOf("/to ") == 0){ // 만약에 line 즉 버퍼에 입력받은 String이 '/to'이 처음에 있으면
+				if(line.indexOf("/to ") == 0){ // 만약에 line 즉 버퍼에 입력받은 String이 '/to'이 처음에 있으면
 					sendmsg(line); // 그 line을 sendmsg 메소드에 전달하며 실행.
 				}
+				if(line.equals("/spamlist")){
+					for(int i=0; i<spam.size(); i++) {
+						broadcast2(String.valueOf(i+1) + ". " + spam.get(i));
+					}
+				}
+				if(line.indexOf("/addspam") == 0){
+					String[] cut = line.split(" ");
+					String spammsg = cut[1];
+					spam.add(spammsg);
+					broadcast2("금지어가 저장되었습니다");
+					add++;
+				}
 				
-				/*spam.add("hate");
-				spam.add("never");
-				spam.add("no!");
-				spam.add("disgusting");
-				spam.add("dead");
-				//금지어들
+				if(add==0) {
+					for(int i=0; i<spam.size(); i++) {
+						if(line.contains(spam.get(i))) result++;
+					}
+				}
 				
-				/*for(int i=0; i<spam.size(); i++) {
-					if(line.contains(spam.get(i)) result++;
-				}*/
-				else if(line.contains("hate")) {
-					continue;
-				}
-				else if(line.contains("never")) {
-					continue;
-				}
-				else if(line.contains("no!")) {
-					continue;
-				}
-				else if(line.contains("disgusting")) {
-					continue;
-				}
-				else if(line.contains("dead")) {
-					continue;
+				if(result>0) {
+					broadcast2("금지어 입니다.");
 				}
 				
 				else // '/quit'나 '/to'나 금지어가 아닌 String이라면
