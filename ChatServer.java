@@ -32,6 +32,7 @@ class ChatThread extends Thread{
 	private HashMap hm; // HashMap 클래스 변수
 	private boolean initFlag = false; // boolean 변수 (초기값으로 false)
 	LinkedList<String> spam = new LinkedList<String>(); // 금지어들 저장
+	LinkedList<String> ignore = new LinkedList<String>();
 	
 	// Constructor (socket값과 hashmap 값을 가지고 와서 초기화)
 	public ChatThread(Socket sock, HashMap hm){
@@ -64,8 +65,7 @@ class ChatThread extends Thread{
 	public void run(){ // run 메소드
 		try{
 			String line = null; // String 변수 line
-			int result;
-			int add;
+			int ignoreAdded;
 			
 			//금지어들
 			spam.add("hate");
@@ -74,45 +74,62 @@ class ChatThread extends Thread{
 			spam.add("disgusting");
 			spam.add("dead");
 			
-			while((line = br.readLine()) != null){ // line에 값이 있을 때(버퍼드에 입력받은 한줄을 line에 저장함) 
-				result = 0;
-				add=0;
+			
+			while((line = br.readLine()) != null){ // line에 값이 있을 때(버퍼드에 입력받은 한줄을 line에 저장함)
 				
-				if(line.equals("/quit")) // 만약에 line 즉 버퍼에 입력받은 String이 '/quit' 와 같다면 
-					break; // while문을 빠져나옴(즉 종료)
+				if(line.indexOf("/") == 0) {
 				
-				if(line.equals("/userlist")) {
-					send_userlist();
-				}
-				if(line.indexOf("/to ") == 0){ // 만약에 line 즉 버퍼에 입력받은 String이 '/to'이 처음에 있으면
-					sendmsg(line); // 그 line을 sendmsg 메소드에 전달하며 실행.
-				}
-				if(line.equals("/spamlist")){
-					for(int i=0; i<spam.size(); i++) {
-						broadcast2(String.valueOf(i+1) + ". " + spam.get(i));
+					if(line.equals("/quit")) // 만약에 line 즉 버퍼에 입력받은 String이 '/quit' 와 같다면 
+						break; // while문을 빠져나옴(즉 종료)
+					
+					if(line.equals("/userlist")){
+						send_userlist();
 					}
-				}
-				if(line.indexOf("/addspam") == 0){
-					String[] cut = line.split(" ");
-					String spammsg = cut[1];
-					spam.add(spammsg);
-					broadcast2("금지어가 저장되었습니다");
-					add++;
-				}
-				
-				if(add==0) {
-					for(int i=0; i<spam.size(); i++) {
-						if(line.contains(spam.get(i))) result++;
+					
+					if(line.equals("/spamlist")){
+						readFromFile();
 					}
+					
+					if(line.indexOf("/to ") == 0){ // 만약에 line 즉 버퍼에 입력받은 String이 '/to'이 처음에 있으면
+						sendmsg(line); // 그 line을 sendmsg 메소드에 전달하며 실행.
+					}
+					
+					if(line.indexOf("/ignore ") == 0){
+						String[] gettingId = line.split(" ");
+						String ignoringId = gettingId[1];
+						
+						ignore.add(ignoringId);
+						saveFile(ignoringId, "ignoringId.txt");
+						
+						abroadcast("지금 " + ignoringId + "님은 모두에게 차단되었습니다.");
+					}
+					
+					/*if(line.indexOf("/ignoredelete ") == 0) {
+						String[] deletingId = line.split(" ");
+						String delete = deletingId[1];
+						
+						ignoredelete(delete);
+						abroadcast("지금 " + delete + "님은 모두에게서 차단이 풀렸습니다.");
+					}*/
+					
+					if(line.indexOf("/addspam") == 0){
+						String[] cut = line.split(" ");
+						String spammsg = cut[1];
+						
+						spam.add(spammsg);
+						saveFile(spammsg, "spam.txt");
+						
+						broadcast2("금지어가 저장되었습니다");
+					}
+					
 				}
 				
-				if(result>0) {
-					broadcast2("금지어 입니다.");
+				else {
+					checking(id, line);
+					//금지어가 있는지 확인 밑 broadcast
 				}
 				
-				else // '/quit'나 '/to'나 금지어가 아닌 String이라면
-					broadcast(id + " : " + line); // broadcast 메소드에 "(입력받은 id) : (입력한 String)"을 전달하며 실행
-				
+					
 			}
 		}catch(Exception ex){ //try & catch (예외사항 처리)
 			System.out.println(ex); // 에러 출력
@@ -128,26 +145,65 @@ class ChatThread extends Thread{
 			}catch(Exception ex){} // try & catch
 		}
 	} // run
+	
 	public void sendmsg(String msg){ // sendmsg 메소드
 		int start = msg.indexOf(" ") +1; // int형 변수 start 값에 받아온 String 값 msg에서 공백 다음부터의 값의 자리를 저장 (보낼 id)
 		int end = msg.indexOf(" ", start); // int형 변수 end 값에 받아온 String 값 msg에서 start 다음에 오는 공백부터의 자리 값을 저장 (메세지)
+		int count = 0;
 		if(end != -1){ // 만약에 end가 있다면
-			String to = msg.substring(start, end); // start부터 end사이의 String 값을 String 변수 to에다 저장 (보낼 id)
-			String msg2 = msg.substring(end+1); // end 이후부터의 String 값은 String 변수 msg2에다 저장 (message)
-			Object obj = hm.get(to); // Object 클래스 변수인 obj에 입력받은 id의 key에 대한 메세지(value)로 저장한다.
-			
-			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss"); //SimpleDateFormat를 사용해서 시간 불러오기 (시:분:초)
-			String format_time = format.format(System.currentTimeMillis()); //format으로 만든 SimpleDateFormat을 string 값으로 할당
-			String timeFinal = makingTime(format_time); // makingTime 메소드로 string 보냄
-			
-			if(obj != null){ // 만약에 obj가 null이 아니면 (즉 메시지가 있으면)
-				PrintWriter pw = (PrintWriter)obj; // obj를 PrintWriter 변수 pw에 저장
-				pw.println(timeFinal + id + " whispered. : " + msg2); // "(입력id) whisphered : (message)" 형태로 출력
-				pw.flush(); // flush (stream 비우기)
-			} // if
+			else {
+				String to = msg.substring(start, end); // start부터 end사이의 String 값을 String 변수 to에다 저장 (보낼 id)
+				String msg2 = msg.substring(end+1); // end 이후부터의 String 값은 String 변수 msg2에다 저장 (message)
+				Object obj = hm.get(to); // Object 클래스 변수인 obj에 입력받은 id의 key에 대한 메세지(value)로 저장한다.
+				
+				SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss"); //SimpleDateFormat를 사용해서 시간 불러오기 (시:분:초)
+				String format_time = format.format(System.currentTimeMillis()); //format으로 만든 SimpleDateFormat을 string 값으로 할당
+				String timeFinal = makingTime(format_time); // makingTime 메소드로 string 보냄
+				
+				if(obj != null){ // 만약에 obj가 null이 아니면 (즉 메시지가 있으면)
+					PrintWriter pw = (PrintWriter)obj; // obj를 PrintWriter 변수 pw에 저장
+					pw.println(timeFinal + id + " whispered. : " + msg2); // "(입력id) whisphered : (message)" 형태로 출력
+					pw.flush(); // flush (stream 비우기)
+				} // if
+			}
 		}
 	} // sendmsg
+	
 	public void broadcast(String msg){// broadcast 메소드 선언
+		synchronized(hm){// 해당 hashmap에 대해서 동기화(실행)
+			int count = 0;
+			if(ignore.contains(id)) {
+				broadcast2("당신은 차단되어있습니다.");
+			}
+			
+			else {
+				Collection collection = hm.values(); // Collection 클래수 변수 collection 선언. collection 안에 hashmap hm의 value를 저장.
+				// Iterator는 모든 Collection 클래스에 데이터를 읽어오는데 사용된다.
+				Iterator iter = collection.iterator(); // Collection 클래스 변수 collection의 데이터를 iter에다 저장.
+				
+				
+				SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+				String format_time = format.format(System.currentTimeMillis());
+				String timeFinal = makingTime(format_time);
+				
+				while(iter.hasNext()){ // iter이 아직 남아 있다면
+					PrintWriter pw = (PrintWriter)iter.next();//pw에 값을 넣어줌 
+					String key=(String)getKey(hm,pw);//value에 대한 key값 찾는 함수에 넣기
+					
+					
+					if(key.equals(id)) {//만약에 id가 같다면
+						continue;//그냥 continue
+					}
+					else { //id가 다르다면
+						pw.println(timeFinal+msg); // 메세지를 출력
+						pw.flush(); // flush (stream 비우기)
+					}
+				}
+			}
+		}
+	} // broadcast
+	
+	public void abroadcast(String msg){// 모두에게 보내는 메시지
 		synchronized(hm){// 해당 hashmap에 대해서 동기화(실행)
 			
 			
@@ -155,21 +211,12 @@ class ChatThread extends Thread{
 			// Iterator는 모든 Collection 클래스에 데이터를 읽어오는데 사용된다.
 			Iterator iter = collection.iterator(); // Collection 클래스 변수 collection의 데이터를 iter에다 저장.
 			
-			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-			String format_time = format.format(System.currentTimeMillis());
-			String timeFinal = makingTime(format_time);
-			
 			while(iter.hasNext()){ // iter이 아직 남아 있다면
 				PrintWriter pw = (PrintWriter)iter.next();//pw에 값을 넣어줌 
 				String key=(String)getKey(hm,pw);//value에 대한 key값 찾는 함수에 넣기
 				
-				if(key.equals(id)) {//만약에 id가 같다면
-					continue;//그냥 continue
-				}
-				else { //id가 다르다면
-					pw.println(timeFinal+msg); // 메세지를 출력
-					pw.flush(); // flush (stream 비우기)
-				}
+				pw.println(msg); // 메세지를 출력
+				pw.flush(); // flush (stream 비우기)
 			}
 		}
 	} // broadcast
@@ -223,15 +270,145 @@ class ChatThread extends Thread{
 		broadcast2("총 " + String.valueOf(count) + "명의 user 있습니다.");
 	}
 	
+	public void containsSpam(String msg) {
+		BufferedReader bReader = null;
+        
+        try {
+            String s;
+            File file = new File("spam.txt");
+            bReader = new BufferedReader(new FileReader(file));
+            int result=0;
+            
+            // 더이상 읽어들일게 없을 때까지 읽어들이게 합니다.
+            while((s = bReader.readLine()) != null) {
+                if(msg.contains(s)) {
+                	broadcast2("금지어입니다.(대신에 상대방에게 사랑합니다로 전송됩니다.)");
+                	broadcast("사랑합니다.");
+                	result++;
+                	break;
+                }
+            }//while
+            
+            if(result==0) {
+            	broadcast(id + " : " + msg);
+            }
+            
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+	}
+	
 	public Object getKey(HashMap m, Object value) { 
 		for(Object o: m.keySet()) { 
 			if(m.get(o).equals(value)) { 
 				return o; 
 			} 
 		} 
-		return null; 
+		return null;
 	}
-
+	
+	public void saveFile(String spamMsg, String fileName) {
+		
+		File file = new File(fileName);
+		FileWriter writer = null;
+		
+		try {
+			writer = new FileWriter(file, true); // true이면 덮어쓰기
+			writer.write("\n");
+			writer.flush();
+			writer.write(spamMsg);
+			writer.flush();
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void readFromFile() {
+		
+	     BufferedReader bReader = null;
+	        
+	        try {
+	            String s;
+	            File file = new File("spam.txt");
+	            bReader = new BufferedReader(new FileReader(file));
+	            int i=1;
+	            
+	            // 더이상 읽어들일게 없을 때까지 읽어들이게 합니다.
+	            while((s = bReader.readLine()) != null) {
+	                broadcast2(String.valueOf(i) + "." + s);
+	                i++;
+	            }
+	        } catch(IOException e) {
+	            e.printStackTrace();
+	        } finally {
+	            try {
+	                if(bReader != null) bReader.close();
+	            } catch(IOException e) {
+	                e.printStackTrace();
+	            }
+	        }//finally
+	  }
+	
+	public void checking(String id, String msg) {
+		
+		BufferedReader bReader = null;
+        
+        try {
+            String s;
+            File file = new File("ignoringId.txt");
+            bReader = new BufferedReader(new FileReader(file));
+            int result=0;
+            
+            // 더이상 읽어들일게 없을 때까지 읽어들이게 합니다.
+            while((s = bReader.readLine()) != null) {
+                if(id.equals(s)) {
+                	broadcast2("당신은 차단되어있습니다.");
+                	result++;
+                	break;
+                }
+            }
+            
+            if(result==0) {
+            	containsSpam(msg);
+            }
+        } catch(IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(bReader != null) bReader.close();
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+        }//finally
+	     
+	 }
+	
+	public void ignoredelete(String deleteId) {
+		try {
+			BufferedWriter file = new BufferedWriter(new FileWriter("ignoringId.txt"));
+			file.close();
+			for(int i=0; i<ignore.size(); i++) {
+				
+				if(ignore.get(i)==deleteId) {
+					continue;
+				}
+				
+				else if(ignore.get(i) == null) {
+					broadcast2("차단된 사람이 없습니다.");
+					break;
+				}
+				
+				else {
+					saveFile(ignore.get(i), "ignoringId.txt");
+				}
+			}
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
 	
 }
 
