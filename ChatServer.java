@@ -151,6 +151,10 @@ class ChatThread extends Thread{
 		int end = msg.indexOf(" ", start); // int형 변수 end 값에 받아온 String 값 msg에서 start 다음에 오는 공백부터의 자리 값을 저장 (메세지)
 		int count = 0;
 		if(end != -1){ // 만약에 end가 있다면
+			if(ignore.contains(id)) {
+				broadcast2("당신은 차단되었습니다.");
+			}
+			else {
 				String to = msg.substring(start, end); // start부터 end사이의 String 값을 String 변수 to에다 저장 (보낼 id)
 				String msg2 = msg.substring(end+1); // end 이후부터의 String 값은 String 변수 msg2에다 저장 (message)
 				Object obj = hm.get(to); // Object 클래스 변수인 obj에 입력받은 id의 key에 대한 메세지(value)로 저장한다.
@@ -165,6 +169,7 @@ class ChatThread extends Thread{
 					pw.flush(); // flush (stream 비우기)
 				} // if
 			}
+		}
 	} // sendmsg
 	
 	public void broadcast(String msg){// broadcast 메소드 선언
