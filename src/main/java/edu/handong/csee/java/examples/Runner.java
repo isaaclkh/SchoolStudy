@@ -2,7 +2,6 @@ package edu.handong.csee.java.examples;
 
 import java.io.File;
 import java.io.FileFilter;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
