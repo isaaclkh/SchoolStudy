@@ -1,5 +1,8 @@
 package edu.handong.csee.java.examples;
 
+import java.io.File;
+import java.io.FileFilter;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -12,6 +15,7 @@ public class Runner {
 	String path;
 	boolean verbose;
 	boolean help;
+	boolean fullpath;
 
 	public static void main(String[] args) {
 
@@ -22,6 +26,7 @@ public class Runner {
 
 	private void run(String[] args) {
 		Options options = createOptions();
+		File f = new File(path);
 		
 		if(parseOptions(options, args)){
 			if (help){
@@ -29,17 +34,26 @@ public class Runner {
 				return;
 			}
 			
+			
 			// path is required (necessary) data so no need to have a branch.
 			System.out.println("You provided \"" + path + "\" as the value of the option p");
 			
+			File[] files = f.listFiles();
 			// TODO show the number of files in the path
 			
-			if(verbose) {
-				
+			if(fullpath) {
+				for(int i=0; i<files.length; i++)
+					System.out.println("File name : " + files[i].getName() + " " + "Path :" + " " + files[i].getAbsolutePath());
 				// TODO list all files in the path
-				
-				System.out.println("Your program is terminated. (This message is shown because you turned on -v option!");
 			}
+			
+			else {
+				for(int i=0; i<files.length; i++)
+					System.out.println("File name : " + files[i].getName() + " " + "Path :" + " " + path + files[i].getName());
+			}
+			
+			if(verbose)
+				System.out.println("Your program is terminated. (This message is shown because you turned on -v option!");
 		}
 	}
 
@@ -53,6 +67,7 @@ public class Runner {
 			path = cmd.getOptionValue("p");
 			verbose = cmd.hasOption("v");
 			help = cmd.hasOption("h");
+			fullpath = cmd.hasOption("f");
 
 		} catch (Exception e) {
 			printHelp(options);
@@ -86,6 +101,15 @@ public class Runner {
 		options.addOption(Option.builder("h").longOpt("help")
 		        .desc("Help")
 		        .build());
+		
+		// add options by using OptionBuilder
+		options.addOption(Option.builder("f").longOpt("fullpath")
+				.desc("Display detailed fullpath!")
+				//.hasArg()
+				.argName("fullpath to display")
+				//.required()
+				.build());
+				
 
 		return options;
 	}
