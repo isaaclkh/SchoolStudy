@@ -1,7 +1,7 @@
 /*
-On my honor, I pledge that I have neither received nor provided improper assistance in the completion of this assignment.
-Signed: ___임건호___ Student Number: ___21800612___
-*/
+ On my honor, I pledge that I have neither received nor provided improper assistance in the completion of this assignment.
+ Signed: ___임건호___ Student Number: ___21800612___
+ */
 
 /*
 * Lecture Note by idebtor@gmail.com 
@@ -38,6 +38,8 @@ void bubbleSort(int *list, int n);
 void insertionSort(int *list, int n);
 void quickSort(int *list, int n);
 void selectionSort(int *list, int n);
+
+void switchToFp(void (*fp)(int*, int), int algo);
 
 void printList(int *list, int n, int max_print, int per_line);
 void randomize(int list[], int n);
@@ -136,6 +138,7 @@ int main(int argc, char *argv[]) {
 	char algorithm_list[4][20] = {"Bubble", "Insertion", "Quicksort", "Selection"};
 	enum algorithm_enum { BUBBLE, INSERTION, QUICKSORT, SELECTION };
 	int  algorithm_chosen = SELECTION;  // default algorithm chosen
+    void (*fp[]) (int *, int) = {bubbleSort, insertionSort, quickSort, selectionSort}; // sortDriver2.cpp
 	DPRINT(cout << ">main...N=" << N << endl;)
 
 	// Use setvbuf() to prevent the output from buffered on console.
@@ -174,7 +177,7 @@ int main(int argc, char *argv[]) {
                         
                     case 'q' : algorithm_chosen = QUICKSORT;
                         break;
-
+                        
                     default: cout << "\tNo such an algorithm available. Try it again.\n";
                         break;
                 }
@@ -191,7 +194,6 @@ int main(int argc, char *argv[]) {
             else N = keyin;
             
             if (list!=NULL) delete[] list;
-            
             list = new int[N]; // free the old list if not NULL 이걸 못함
             
 			// set N with the new keyin value
@@ -209,7 +211,7 @@ int main(int argc, char *argv[]) {
             printList(list, N, max_print, per_line);
             
             cout << "\n";
-			break;
+            break;
 
 		case 'r': DPRINT(cout << "case = " << option_char << endl;)
 			if (N <= 1) {
@@ -233,25 +235,8 @@ int main(int argc, char *argv[]) {
 			}
 			cout << "\n\tThe clock ticks and " << algorithm_list[algorithm_chosen] << " begins...\n";
 			start = clock();
-
-                switch (algorithm_chosen) {
-                    
-                    case BUBBLE:
-                        bubbleSort(list, N);
-                        break;
-                    case INSERTION:
-                        insertionSort(list, N);
-                        break;
-                    case QUICKSORT:
-                        quickSort(list, N);
-                        break;
-                    case SELECTION:
-                        selectionSort(list, N);
-                        break;
-                        
-                    default:
-                        break;
-                }
+                
+            fp[algorithm_chosen](list, N); // sortDriver2.cpp
 
 			end = clock();
 			cout << "\tDuration: " << (end - start) / (double)CLOCKS_PER_SEC << " seconds\n";
