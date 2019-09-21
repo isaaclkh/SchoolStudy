@@ -14,6 +14,9 @@
 * 2019/02/02	C++ Conversion
 */
 
+/*On my honour, I pledge that I have neither received nor provided improper assistance in the completion of this assignment.
+Signed: __임건호__ Section: __01__ Student Number: ___21800612___*/
+
 #ifdef DEBUG
 #define DPRINT(func) func;
 #else
@@ -40,7 +43,7 @@ int binary_search(int *list, int key, int size);
 
 int main(int argc, char *argv[]) {
 	int option;
-	int N;
+	int N, K, count;
 
 	// Use setvbuf() to prevent the output from buffered on console.
 	setvbuf(stdout, NULL, _IONBF, 0);
@@ -107,32 +110,83 @@ int main(int argc, char *argv[]) {
 			}
 			break;
 		case 4:
-			cout << "\tbunnyEars(0) = 0";
-			cout << "\tbunnyEars(1) = 2"; 
-			cout << "\tbunnyEars(2) = 4";
-			cout << "\tbunnyEars(3) = 6";
-			cout << "\tbunnyEars(234) = 468";
+			cout << "\tbunnyEars(0) = 0\n";
+			cout << "\tbunnyEars(1) = 2\n";
+			cout << "\tbunnyEars(2) = 4\n";
+			cout << "\tbunnyEars(3) = 6\n";
+			cout << "\tbunnyEars(234) = 468\n";
 			while (1) {
-				N = GetInt("\tEnter a number of bunnies(0 to quit): ");
+				N = GetInt("\tEnter a number of Bunnies(0 to quit): ");
 				if (N <= 0) break;
 				cout << "\tbunnyEars(" << N << ") = " << bunnyEars(N) << endl;
 			}
 			break;
 		case 5:
-			cout << "your code here\n";
+            cout << "\tfunnyEars(0) = 0\n";
+            cout << "\tfunnyEars(1) = 2\n";
+            cout << "\tfunnyEars(2) = 5\n";
+            cout << "\tfunnyEars(4) = 10\n";
+            cout << "\tfunnyEars(9) = 22\n";
+            while (1) {
+                N = GetInt("\tEnter a number of Funnies(0 to quit): ");
+                if (N <= 0) break;
+                cout << "\tfunnyEars(" << N << ") = " << funnyEars(N) << endl;
+            }
 			break;
 		case 6:
-			cout << "your code here\n";
-			break;
+            cout << "\ttriangle(0) = 0\n";
+            cout << "\ttriangle(1) = 1\n";
+            cout << "\ttriangle(2) = 3\n";
+            cout << "\ttrinalge(3) = 6\n";
+            cout << "\ttriangle(4) = 10\n";
+            cout << "\tfunnyEars(7) = 28\n";
+            while (1) {
+                N = GetInt("\tEnter a row number for Triangle(0 to quit): ");
+                if (N <= 0) break;
+                cout << "\ttriangle(" << N << ") = " << triangle(N) << endl;
+            }
+            break;
 		case 7:
-			cout << "your code here\n";
-			break;
+			cout << "\tsumDigits(126) = 9\n";
+            cout << "\tsumDigits(12) = 3\n";
+            cout << "\tsumDigits(1) = 1\n";
+            cout << "\tsumDigits(10110) = 3\n";
+            cout << "\tsumDigits(235) = 10\n";
+            while (1) {
+                N = GetInt("\tEnter a number to sum digits(0 to quit): ");
+                if (N <= 0) break;
+                cout << "\ttriangle(" << N << ") = " << sumDigits(N) << endl;
+            }
+            break;
 		case 8:
-			cout << "your code here\n";
+			cout << "\tcount8(818) = 2\n";
+            cout << "\tcount8(8) = 1\n";
+            cout << "\tcount8(123) = 0\n";
+            cout << "\tcount8(881238) = 3\n";
+            cout << "\tcount8(48581) = 2\n";
+            cout << "\tcount8(888586198) = 5\n";
+            cout << "\tcount8(99899) = 1\n";
+            while (1) {
+                N = GetInt("\tEnter a number to count 8(0 to quit): ");
+                if (N <= 0) break;
+                cout << "\tcount8(" << N << ") = " << count8(N) << endl;
+            }
 			break;
 		case 9:
-			cout << "your code here\n";
-			break;
+			cout << "\tpowerN(2, 5) = 32\n";
+            cout << "\tpowerN(3, 1) = 3\n";
+            cout << "\tpowerN(3, 2) = 9\n";
+            cout << "\tpowerN(3, 3) = 27\n";
+            cout << "\tpowerN(10, 2) = 100\n";
+            cout << "\tpowerN(10, 3) = 1000\n";
+            while (1) {
+                N = GetInt("\tEnter a base number(0 to quit): ");
+                if (N <= 0) break;
+                K = GetInt("\tEnter a power number(0 to quit): ");
+                if (K <= 0) break;
+                cout << "\tpowerN(" << N << ") = " << powerN(N, K) << endl;
+            }
+            break;
 
 		case 10:   
 			cout << "\tRecursive Binary Search\n ";
@@ -147,6 +201,7 @@ int main(int argc, char *argv[]) {
 					list[i] = rand() % N;
 
 				quickSort(list, N);
+                cout << "\t";
 				for (int i = 0; i < N; i++)
 					cout << list[i] << " ";
 				cout << endl;
@@ -154,16 +209,45 @@ int main(int argc, char *argv[]) {
 				int key = GetInt("\tEnter a number to search: ");
 				int index = binary_search(list, key, N);
 
-				cout << "index=" << index << endl;
-				cout << "your code here to replace the line above.\n";
+                if(key == list[index])
+                    cout << "\t" <<key << " is @[" << index << "]" << endl;
+                
+                else{
+                    count = 0;
+                    if(index==-1){
+                        for(int i=0; i < N; i++){
+                            if(key>list[i]) count++;
+                        }
+                    cout << "\t" << key << " is not @[" << count << "]" << endl;
+                    }
+                }
+				/*cout << "index=" << index << endl;
+				cout << "your code here to replace the line above.\n";*/
 
-				delete list;
+				delete[] list;
 			}
 		default:
 			break;
 		}
 	};   
 
-	cout << "Happy Coding~~\n";
+	cout << "\n\tHappy Coding~~\n";
 	return EXIT_SUCCESS;
 }
+
+
+/*int count(int n){
+    int n=0;
+    
+    if(n%10==8){
+        n++;
+        return n + count(n/10);
+    }
+    
+    if(n/10 == 0){
+        if(n == 8) return 1;
+        else return 0;
+    }
+    
+    
+}*/

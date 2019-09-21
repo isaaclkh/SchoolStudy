@@ -11,6 +11,9 @@
  *
  */
 
+/*On my honour, I pledge that I have neither received nor provided improper assistance in the completion of this assignment.
+Signed: __임건호__ Section: __01__ Student Number: ___21800612___*/
+
 #include <iostream>
 
 /* 
@@ -21,6 +24,8 @@
  *         otherwise, return[n × factorial(n - 1)]
  * end factorial
 */
+
+int _binary_search(int list[], int num, int low, int high);
 
 long long factorial(int n) {
     /*if (n == 1) return n;
@@ -79,7 +84,7 @@ int bunnyEars(int bunnies) {
 	// (towards the base case), and fix up what it returns.
 	return 2 + bunnyEars(bunnies - 1);*/
     
-    return bunnies == 0? 0 : 2 + bunnyEars(bunnies - 1);
+    return bunnies <= 0? 0 : 2 + bunnyEars(bunnies - 1);
 }
 
 
@@ -102,7 +107,7 @@ int bunnyEars(int bunnies) {
 
 int funnyEars(int funnies) {
     
-    if(funnies == 0) return 0;
+    if(funnies <= 0) return 0;
     
     return funnies % 2 == 0? 3 + funnyEars(funnies-1) : 2 + funnyEars(funnies-1);
 }
@@ -123,7 +128,7 @@ int funnyEars(int funnies) {
  */
 
 int triangle(int rows) {
-    return rows == 0? 0 : rows + triangle(rows-1);
+    return rows <= 0? 0 : rows + triangle(rows-1);
 }
 
 
@@ -139,7 +144,7 @@ int triangle(int rows) {
  * sumDigits(235) → 10
  */
 int sumDigits(int n) {
-	return n % 10 + sumDigits(n/10);
+    return n <= 0? 0 : (n % 10 + sumDigits(n / 10));
 }
 
 /* 
@@ -160,10 +165,10 @@ int sumDigits(int n) {
  */
 
 int count8(int n) {
-    if(n == 0) return 0;
+    if(n <= 0) return 0;
     if(n % 10 == 8)
     {
-        if(n / 10 % 10 == 8) return 2+count8(n/10);
+        if(n / 10 % 10 == 8) return 1+count8(n/10);
         return 1+count8(n/10);
     }
     return count8(n/10);
@@ -182,19 +187,21 @@ int count8(int n) {
  */
 
 long long powerN(int base, int n) {
-    return n == 1? 1 : base * powerN(base, n-1);
+    return n == 0? 1 : base * powerN(base, n-1);
 }
 
-int binarySearch(int list[], int num, int low, int high){
+/*int binary_search(int *list, int key, int size) {
+    int answer = _binary_search(list, key, 0, size);
+    return answer;
+}
+
+int _binary_search(int list[], int num, int low, int high){
     int mid;
     
     if (low > high) return -1;
-    
     mid = (low + high) / 2;
     
     if(num == list[mid]) return mid;
-    
-    if(num < list[mid]) return binarySearch(list, num, low, mid-1);
-    
-    else return binarySearch(list, num, mid+1, high);
-}
+    if(num < list[mid]) return _binary_search(list, num, low, mid-1);
+    else return _binary_search(list, num, mid+1, high);
+}*/

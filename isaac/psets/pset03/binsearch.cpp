@@ -40,6 +40,9 @@
  * indicate that the key is not in the list. Can it simply return -low? 
  */
 
+/*On my honour, I pledge that I have neither received nor provided improper assistance in the completion of this assignment.
+Signed: __임건호__ Section: __01__ Student Number: ___21800612___*/
+
 #include <iostream>
 #include <iomanip>
 using namespace std;
@@ -56,10 +59,10 @@ int _binary_search(int *data, int key, int lo, int hi) {
     
     if (lo > hi) return -1;
     mid = (lo + hi) / 2;
-    if(key == list[mid]) return mid;
-    if(key < list[mid]) return binarySearch(list, key, lo, mid-1);
-    else return binarySearch(list, key, mid+1, hi);
-	
+    
+    if(key == data[mid]) return mid;
+    if(key < data[mid]) return _binary_search(data, key, lo, mid-1);
+    else return _binary_search(data, key, mid+1, hi);
 }
 
 int binary_search(int *list, int key, int size) {
@@ -73,8 +76,7 @@ int binary_search(int *list, int key, int size) {
 int main(int argc, char *argv[]) {
 	int list[] = { 3, 5, 6, 9, 11, 12, 15, 16, 18, 19, 20 };
 	int size = sizeof(list) / sizeof(list[0]);
-    int random_num;
-
+    int random_num, answer, count;
 	cout << "list: ";
 	for (int i = 0; i < size; i++)
 		cout << list[i] << " ";
@@ -87,12 +89,25 @@ int main(int argc, char *argv[]) {
 
 	cout << "your code here \n";
     
+    srand((unsigned)time(nullptr));
+    
     for (int i = 0; i < size; i++){
-        srand((unsigned)time(nullptr));
-        random_num = rand() % list[size];
+        random_num = rand() % list[size-1];
+        answer = binary_search(list, random_num, size);
         
-        cout << "answer : " << binary_search(list, random_num, size)
+        if(random_num == list[answer])
+            cout << random_num << "\tis @[" << answer << "]" << endl;
+        
+        else{
+            count = 0;
+            if(answer==-1){
+                for(int i=0; i < size; i++){
+                    if(random_num>list[i]) count++;
+                }
+            cout << random_num << "\tis not @[" << count << "]" << endl;
+            }
+        }
+            
     }
-
 }
 #endif
