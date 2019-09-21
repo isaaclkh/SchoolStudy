@@ -52,10 +52,14 @@ using namespace std;
 
 int _binary_search(int *data, int key, int lo, int hi) {
 	DPRINT(cout << "key=" << key << " lo=" << lo << " hi=" << hi << endl;);
-
-	cout << "your code here \n";
-
-	return 0;
+    int mid;
+    
+    if (lo > hi) return -1;
+    mid = (lo + hi) / 2;
+    if(key == list[mid]) return mid;
+    if(key < list[mid]) return binarySearch(list, key, lo, mid-1);
+    else return binarySearch(list, key, mid+1, hi);
+	
 }
 
 int binary_search(int *list, int key, int size) {
@@ -69,6 +73,7 @@ int binary_search(int *list, int key, int size) {
 int main(int argc, char *argv[]) {
 	int list[] = { 3, 5, 6, 9, 11, 12, 15, 16, 18, 19, 20 };
 	int size = sizeof(list) / sizeof(list[0]);
+    int random_num;
 
 	cout << "list: ";
 	for (int i = 0; i < size; i++)
@@ -81,6 +86,13 @@ int main(int argc, char *argv[]) {
 	// print the results as shown in binsearchx.exe.
 
 	cout << "your code here \n";
+    
+    for (int i = 0; i < size; i++){
+        srand((unsigned)time(nullptr));
+        random_num = rand() % list[size];
+        
+        cout << "answer : " << binary_search(list, random_num, size)
+    }
 
 }
 #endif

@@ -1,4 +1,4 @@
-﻿/* 
+/* 
  * Lecture Notes on Recursion by Youngsup Kim
  * Recursive algorithm is expressed in terms of 
  * 1. base case(s) for which the solution can be stated non‐recursively,
@@ -23,10 +23,11 @@
 */
 
 long long factorial(int n) {
-	if (n == 1) return n;
-	return n * factorial(n - 1);
+    /*if (n == 1) return n;
+    return n * factorial(n - 1);*/
+    
+    return n == 0? 1 : n * factorial(n-1);
 }
-
 
 /*
  * Example 2: GCD(Great Common Divisor)
@@ -36,8 +37,10 @@ long long factorial(int n) {
  *		          = gcd⁡(x, 0) = x    if y = 0
  */
 int gcd(int x, int y) {
-	if (y == 0) return x;
-	return gcd(y, x % y);
+	/*if (y == 0) return x;
+	return gcd(y, x % y);*/
+    
+    return y == 0? x : gcd(y, x % y);
 }
 
 
@@ -51,8 +54,10 @@ int gcd(int x, int y) {
  */
 
 long long fibonacci(int n) {
-	if (n == 0 || n == 1) return n;
-	return fibonacci(n - 1) + fibonacci(n - 2);
+	/*if (n == 0 || n == 1) return n;
+	return fibonacci(n - 1) + fibonacci(n - 2);*/
+    
+    return n <= 1 ? n : fibonacci(n - 1) + fibonacci(n - 2);
 }
 
 
@@ -68,11 +73,13 @@ long long fibonacci(int n) {
  *	bunnyEars(234) → 468 
  */
 int bunnyEars(int bunnies) {
-	if (bunnies == 0) return 0;
+	/*if (bunnies == 0) return 0;
 
 	// Recursive case: otherwise, make a recursive call with bunnies-1
 	// (towards the base case), and fix up what it returns.
-	return 2 + bunnyEars(bunnies - 1);
+	return 2 + bunnyEars(bunnies - 1);*/
+    
+    return bunnies == 0? 0 : 2 + bunnyEars(bunnies - 1);
 }
 
 
@@ -92,9 +99,12 @@ int bunnyEars(int bunnies) {
  funnyEars(9) → 22
  *
  */
+
 int funnyEars(int funnies) {
-	std::cout << "your code here\n";
-	return 2;
+    
+    if(funnies == 0) return 0;
+    
+    return funnies % 2 == 0? 3 + funnyEars(funnies-1) : 2 + funnyEars(funnies-1);
 }
 
 /* 
@@ -110,12 +120,10 @@ int funnyEars(int funnies) {
  * triangle(3) → 6
  * triangle(4) → 10
  * triangle(7) → 28
- * 
  */
 
 int triangle(int rows) {
-	std::cout << "your code here\n";
-	return rows;
+    return rows == 0? 0 : rows + triangle(rows-1);
 }
 
 
@@ -131,8 +139,7 @@ int triangle(int rows) {
  * sumDigits(235) → 10
  */
 int sumDigits(int n) {
-	std::cout << "your code here\n";
-	return n;
+	return n % 10 + sumDigits(n/10);
 }
 
 /* 
@@ -153,8 +160,13 @@ int sumDigits(int n) {
  */
 
 int count8(int n) {
-	std::cout << "your code here\n";
-	return n;
+    if(n == 0) return 0;
+    if(n % 10 == 8)
+    {
+        if(n / 10 % 10 == 8) return 2+count8(n/10);
+        return 1+count8(n/10);
+    }
+    return count8(n/10);
 }
 
 /* 
@@ -170,8 +182,19 @@ int count8(int n) {
  */
 
 long long powerN(int base, int n) {
-	std::cout << "your code here\n";
-	return n;
+    return n == 1? 1 : base * powerN(base, n-1);
 }
 
-
+int binarySearch(int list[], int num, int low, int high){
+    int mid;
+    
+    if (low > high) return -1;
+    
+    mid = (low + high) / 2;
+    
+    if(num == list[mid]) return mid;
+    
+    if(num < list[mid]) return binarySearch(list, num, low, mid-1);
+    
+    else return binarySearch(list, num, mid+1, high);
+}

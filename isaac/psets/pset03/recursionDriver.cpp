@@ -162,7 +162,7 @@ int main(int argc, char *argv[]) {
 		default:
 			break;
 		}
-	};
+	};   
 
 	cout << "Happy Coding~~\n";
 	return EXIT_SUCCESS;
