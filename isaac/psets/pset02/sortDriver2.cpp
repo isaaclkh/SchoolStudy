@@ -256,6 +256,7 @@ int main(int argc, char *argv[]) {
             printList(list, N, max_print, per_line);
             
 			break;
+                
 		case 'd': DPRINT(cout << "case = " << option_char << endl;)
 
             cout << "\n\tEnter max sample size to display:";
@@ -264,6 +265,7 @@ int main(int argc, char *argv[]) {
             printList(list, N, max_print, per_line);
 
 			break;
+                
 		default:
 			break;
 		}
