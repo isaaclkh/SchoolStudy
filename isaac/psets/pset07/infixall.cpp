@@ -26,7 +26,27 @@ using namespace std;
 // Stay tuned since we are going to use C++ Template to make them into 
 // one or a generic function.
 // prints stack items from botton to top recursively.
-void printStack(stack<int> s) {
+template <typename S>
+S printStack(S a){
+    stack<S> temp;
+    S tempType;
+    
+    while(!(a.empty())){
+        tempType = a.top();
+        temp.push(tempType);
+        a.pop();
+    }
+    
+    while(!(temp.empty())){
+        tempType = temp.top();
+        cout << tempType;
+        a.push(tempType);
+        temp.pop();
+    }
+    
+}
+
+/*void printStack(stack<int> s) {
 	//cout << "stack<int>: your code here\n";
     stack<int> temp;
     int temp_int;
@@ -64,7 +84,7 @@ void printStack(stack<char> s) {
         s.push(temp_chr);
         temp.pop();
     }
-}
+}*/
 
 // performs arithmetic operations. 
 int apply_op(int a, int b, char op) {
@@ -73,6 +93,7 @@ int apply_op(int a, int b, char op) {
 	case '-': return a - b;
 	case '*': return a * b;
 	case '/': return a / b;
+    case '^': return pow(a, b);
 	}
 	cout << "Unsupported operator encountered: " << op << endl;
 	return 0;
