@@ -1,4 +1,5 @@
 .text
+
 main:
     addi $s0, $zero, 0
    	addi $t0, $zero, 5
@@ -10,4 +11,5 @@ main:
 
     li $v0, 10 # terminate program
     syscall
+
 .end

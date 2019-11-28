@@ -19,7 +19,7 @@ main:
    li $v0, 4
    syscall
 
-   la $a0, buffer # print the input string 
+   la $a0, buffer # print the input string
    li $v0, 4
    syscall
 
