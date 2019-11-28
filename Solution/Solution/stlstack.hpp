@@ -9,6 +9,8 @@
 #ifndef stlstack_hpp
 #define stlstack_hpp
 
-#include <stdio.h>
+#include <iostream>
+#include <stack>
+using namespace std;
 
 #endif /* stlstack_hpp */

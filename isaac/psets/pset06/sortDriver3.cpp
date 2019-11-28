@@ -1,4 +1,8 @@
 /*
+ On my honour, I pledge that I have neither received nor provided improper assistance
+ in the completion of this assignment.
+ Signed:  임건호  Section:  01  Student Number:  21800612
+ 
 * Lecture Note by idebtor@gmail.com
 *
 * This program is written to run the sort algorithms.
@@ -30,9 +34,12 @@
 using namespace std;
 
 void printList(int *list, int n, int max_print, int per_line);
-
 void randomize(int list[], int size);
 void profiling(void (*sortFunc)(int*, int), int* list, int n, bool random=true);
+void bubbleSort(int *list, int n);
+void insertionSort(int *list, int n);
+void quickSort(int *list, int n);
+void selectionSort(int *list, int n);
 
 // sortDriver to test sort functions or algorithms.
 int main(int argc, char *argv[]) {
@@ -48,6 +55,11 @@ int main(int argc, char *argv[]) {
 	char algorithm_list[4][20] = {"Bubble", "Insertion", "Quicksort", "Selection"};
 	enum algorithm_enum { BUBBLE, INSERTION, QUICKSORT, SELECTION };
 	int  algorithm_chosen = SELECTION;  // default algorithm chosen
+    const int STARTING_SAMPLES = 500;
+    void (*fp[]) (int *, int) = {bubbleSort, insertionSort, quickSort, selectionSort};
+    int size = N;
+    int* copyList = new(nothrow) int[N];
+    int j = N - 1;
 	DPRINT(cout << ">main...N=" << N << endl;)
 
 	// Use setvbuf() to prevent the output from buffered on console.
@@ -68,7 +80,8 @@ int main(int argc, char *argv[]) {
 		DPRINT(cout << "option_char = " << option_char << endl;);
 
 		switch (option_char) {
-		case 'a': DPRINT(cout << "case = " << option_char << endl;);
+        
+        case 'a': DPRINT(cout << "case = " << option_char << endl;);
 			// your code here
 			switch (GetChar("\tEnter b for bubble, i for insertion, s for selection, q for quick sort: ")) {
 			case 'b': algorithm_chosen = BUBBLE; 		break;
@@ -118,17 +131,42 @@ int main(int argc, char *argv[]) {
 				cout << "\tSet sample size first\n";
 				break;
 			}
-
-			cout << "your code here" << endl;
+            
+            copy_n(list, N, copyList);
+            fp[algorithm_chosen](copyList, N);
+                
+            for(int i=0; i<N; i++){
+                swap(copyList[i], copyList[size-1]);
+                size--;
+            }
+            
+			//cout << "your code here" << endl;
 
 			randomized = 'N';
-			printList(list, N, max_print, per_line);
+			printList(copyList, N, max_print, per_line);
+            delete[] copyList;
 			break;
+                
 		case 'p':
+                if(N <= STARTING_SAMPLES){
+                    cout << "\tSet sample size first or change the sample size larger than 500 to profile" << endl;
+                    break;
+                }
 
-			cout << "your code here" << endl;
+                cout << "\n\tinsertionSort(): already sorted - best case." << endl;
+                profiling(fp[algorithm_chosen], list, N, false);
+
+                cout << "\n\tinsertionSort(): randomized - average case." << endl;
+                profiling(fp[algorithm_chosen], list, N);
+
+                cout << "\n\tinsertionSort(): sorted reversed - worst case." << endl;
+                
+                
+                for (int i = 0; i < N; i++) list[i] = j--;
+                profiling(fp[algorithm_chosen], list, N, false);
 
 			break;
+                
 		case 's': DPRINT(cout << "case = " << option_char << endl;);
 			if (N <= 0) {
 				cout << "\tSet sample size first\n";
@@ -136,9 +174,9 @@ int main(int argc, char *argv[]) {
 			}
 			cout << "\tThe clock ticks and " << algorithm_list[algorithm_chosen] << " begins...\n";
 			start = clock();
-
-			cout << "your one-line code here: use a function pointer" << endl;
-
+            
+            fp[algorithm_chosen](list, N);
+			//cout << "your one-line code here: use a function pointer" << endl;
 			printList(list, N, max_print, per_line);
 			randomized = 'N';
 			//////////////////
@@ -170,6 +208,7 @@ int main(int argc, char *argv[]) {
 
 			////////////////
 			break;
+                
 		default:
 			break;
 		}

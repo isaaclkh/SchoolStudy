@@ -7,3 +7,18 @@
 //
 
 #include "stlstack.hpp"
+
+int main(int argc, const char * argv[]) {
+    // insert code here...
+    stack <char> s;
+    s.push('a');
+    s.push('b');
+    s.push('c');
+    
+    while (!s.empty()) {
+        cout << s.top();
+        s.pop();
+    }
+    
+    return 0;
+}

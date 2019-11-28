@@ -15,6 +15,7 @@
 // 
 #include <iostream>
 #include <stack>
+#include <cmath>
 using namespace std;
 
 #ifdef DEBUG
@@ -39,7 +40,7 @@ void printStack(stack<int> s) {
     
     while(!(temp.empty())){
         temp_int = temp.top();
-        cout << temp_int;
+        cout << temp_int << " ";
         s.push(temp_int);
         temp.pop();
     }
@@ -60,7 +61,7 @@ void printStack(stack<char> s) {
     
     while(!(temp.empty())){
         temp_chr = temp.top();
-        cout << temp_chr;
+        cout << temp_chr << " ";
         s.push(temp_chr);
         temp.pop();
     }
@@ -103,9 +104,20 @@ int evaluate(string tokens) {
 		// current token is a value(or operand), push it to va_stack. 
 		if (isdigit(tokens[i])) { 
 			int va = 0;
+            int tem = 0;
+            int count = 1;
 			// add the code to handle multi-digits value(operand) 
 			va = tokens[i] - '0';
-			va_stack.push(va);
+            
+            if(isdigit(tokens[i+1])){
+                for(;isdigit(tokens[i+1]);){
+                    tem = tokens[i+1] - '0';
+                    va = tem + (pow(10,count) * va);
+                    i++;
+                }
+            }
+            
+            va_stack.push(va);
 			DPRINT(cout << " va_stack.push: " << va << endl;);
 		} // closing brace encountered; compute it and push the result to va_stack. 
 		else if (tokens[i] == ')') {  
@@ -121,6 +133,8 @@ int evaluate(string tokens) {
 
 	printStack(va_stack);
 	printStack(op_stack);
+    
+    cout << "\nanswer : ";
 
 	DPRINT(cout << " Parsing finished...clear va_stack and op_stack if any." << endl;);
 	// The whole expression has been parsed at this point, 

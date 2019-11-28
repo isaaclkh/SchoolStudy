@@ -37,7 +37,7 @@ int main() {
 	cout << "   [-9] = " << evaluate("1 - ( 2 * 5 )") << endl;
 	cout << "    [6] = " << evaluate("( ( 3 - 1 ) * 5 ) - 4") << endl;
 
-	/***************************************************************************
+	
 	cout << "Step 2: Multi-digits operand(or value)" << endl;
 	cout << "  [230] = " << evaluate("1 + ( 234 - 5 )") << endl;
 	cout << "   [18] = " << evaluate("123 - ( 21 * 5 )") << endl;
@@ -53,7 +53,7 @@ int main() {
 	cout << "   [84] = " << evaluate("2 * (( 3 - 7 ) + 46)") << endl;
 	cout << "  [402] = " << evaluate("(12 + (4 * 100)) - (2* 5)") << endl;
 	cout << "  [591] = " << evaluate("(((2 + 4) * 100) - ( 2 *5 )) + 1") << endl;
-	****************************************************************************/
+	
 
 	cout << "Happy Coding~~";
 	return EXIT_SUCCESS;

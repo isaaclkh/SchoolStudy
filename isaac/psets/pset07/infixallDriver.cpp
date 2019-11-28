@@ -29,18 +29,19 @@ int main() {
 		if (exp[0] == 'q') break;
 		cout << exp << " = " << evaluate(exp) << endl;
 	};
-
+    
+    cout << endl;
 	cout << "Step 1: Simple cases" << endl;
 	cout << "   [-1] = " << evaluate("1 + 2 - 4") << endl;
-	cout << "   [-6] = " << evaluate("1 - 2 * 5 + 3") << endl;
+    cout << "   [-6] = " << evaluate("1 - 2 * 5 + 3") << endl;
 	cout << "   [13] = " << evaluate("3 + 4*5/2") << endl;
 	cout << "   [41] = " << evaluate("(1 + 2^ 3 ) * 5 - 4") << endl;
-
-	cout << "Step 2: Multi-digits operand(or value)" << endl;
+	
+    cout << "Step 2: Multi-digits operand(or value)" << endl;
 	cout << "  [230] = " << evaluate("1 + 234 - 5") << endl;
 	cout << "   [18] = " << evaluate("123 - 21 * 5") << endl;
 	cout << "   [60] = " << evaluate("(12 - 8) * 45/3") << endl;
-
+    
 	cout << "Step 3: Space toleration" << endl;
 	cout << " [1000] = " << evaluate("(  1 + 249 ) *4") << endl;
 	cout << "  [120] = " << evaluate("(1+23)*5") << endl;
@@ -50,7 +51,7 @@ int main() {
 	cout << "    [6] = " << evaluate("2*(21-6)/5") << endl;
 	cout << "   [84] = " << evaluate("2 * (( 3 - 7 ) + 46)") << endl;
 	cout << "  [402] = " << evaluate("12 + 4 * 100 - 2* 5") << endl;
-	cout << "  [591] = " << evaluate("(2 + 4) * 100 - 2 *5 + 1") << endl;
+	cout << "  [591] = " << evaluate("(2 + 4) * 100 - 2 *5 + 1") << endl; 
 
 	cout << "Happy Coding~~";
 	return EXIT_SUCCESS;

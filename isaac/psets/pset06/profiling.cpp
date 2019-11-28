@@ -44,6 +44,7 @@
 #include <sstream>
 #include <algorithm>
 #include "sort.h"
+#include <cassert>
 using namespace std;
 
 #ifdef DEBUG
@@ -109,7 +110,7 @@ void profiling(void (*sortFunc)(int*, int), int* list, int n, bool random=true) 
         //cout << "your code here for the followings inside do loop \n";
         do {
             repetitions++;// count the repetitions for one second
-            copy_n(list, n, saved);// get a copy of list from saved
+            copy_n(list, i, saved);// get a copy of list from saved
             sortFunc(saved, i);// sort
         } while (clock() - start < 1000);        // run it over one sec
 
@@ -128,7 +129,7 @@ void profiling(void (*sortFunc)(int*, int), int* list, int n, bool random=true) 
 ////////////////////////////////////////////////////////////////////////
 ////// Step 4: Turn off this main() and use one in sortDriver3.cpp ////
 ///////////////////////////////////////////////////////////////////////
-#if 1
+#if 0
 int main(int argc, char *argv[]) {
     int N = 0;
     // Use setvbuf() to prevent the output from buffered on console.
