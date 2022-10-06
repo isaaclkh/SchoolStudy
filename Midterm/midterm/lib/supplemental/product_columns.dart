@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 
 import '../model/product.dart';
+import '../model/hotel.dart';
 import 'product_card.dart';
 
 class TwoProductCardColumn extends StatelessWidget {
@@ -24,8 +25,11 @@ class TwoProductCardColumn extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final Product bottom;
-  final Product? top;
+  //final Product bottom;
+  //final Product? top;
+
+  final Hotel bottom;
+  final Hotel? top;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +52,7 @@ class TwoProductCardColumn extends StatelessWidget {
             child: top != null
                 ? ProductCard(
                     imageAspectRatio: imageAspectRatio,
-                    product: top!,
+                    hotel: top!,
                   )
                 : SizedBox(
                     height: heightOfCards,
@@ -59,7 +63,7 @@ class TwoProductCardColumn extends StatelessWidget {
             padding: const EdgeInsetsDirectional.only(end: 28.0),
             child: ProductCard(
               imageAspectRatio: imageAspectRatio,
-              product: bottom,
+              hotel: bottom,
             ),
           ),
         ],
@@ -69,10 +73,11 @@ class TwoProductCardColumn extends StatelessWidget {
 }
 
 class OneProductCardColumn extends StatelessWidget {
-  const OneProductCardColumn({required this.product, Key? key})
+  const OneProductCardColumn({required this.hotel, Key? key})
       : super(key: key);
 
-  final Product product;
+  //final Product product;
+  final Hotel hotel;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +86,7 @@ class OneProductCardColumn extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         ProductCard(
-          product: product,
+          hotel: hotel,
         ),
         const SizedBox(
           height: 40.0,

@@ -15,16 +15,17 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../model/product.dart';
+//import '../model/product.dart';
+import '../model/hotel.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard(
-      {this.imageAspectRatio = 33 / 49, required this.product, Key? key})
+      {this.imageAspectRatio = 33 / 49, required this.hotel, Key? key})
       : assert(imageAspectRatio > 0),
         super(key: key);
 
   final double imageAspectRatio;
-  final Product product;
+  final Hotel hotel;
 
   static const kTextBoxHeight = 65.0;
 
@@ -34,10 +35,16 @@ class ProductCard extends StatelessWidget {
         decimalDigits: 0, locale: Localizations.localeOf(context).toString());
     final ThemeData theme = Theme.of(context);
 
+    /*
     final imageWidget = Image.asset(
-      product.assetName,
-      package: product.assetPackage,
+      hotel.assetName,
+      package: hotel.assetPackage,
       fit: BoxFit.cover,
+    );
+    */
+
+    const imageWidget = Image(
+        image: AssetImage('01.jpg'),
     );
 
     return Column(
@@ -56,7 +63,7 @@ class ProductCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text(
-                product.name,
+                hotel.name,
                 style: theme.textTheme.button,
                 softWrap: false,
                 overflow: TextOverflow.ellipsis,
@@ -64,7 +71,7 @@ class ProductCard extends StatelessWidget {
               ),
               const SizedBox(height: 4.0),
               Text(
-                formatter.format(product.price),
+                formatter.format(hotel.location),
                 style: theme.textTheme.caption,
               ),
             ],

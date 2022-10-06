@@ -14,16 +14,18 @@
 
 import 'package:flutter/material.dart';
 
-import '../model/product.dart';
+//import '../model/product.dart';
 import 'product_columns.dart';
+import '../model/hotel.dart';
 
 class AsymmetricView extends StatelessWidget {
-  final List<Product> products;
+  //final List<Product> products;
+  final List<Hotel> hotels;
 
-  const AsymmetricView({Key? key, required this.products}) : super(key: key);
+  const AsymmetricView({Key? key, required this.hotels}) : super(key: key);
 
   List<Widget> _buildColumns(BuildContext context) {
-    if (products.isEmpty) {
+    if (hotels.isEmpty) {
       return <Container>[];
     }
 
@@ -35,22 +37,22 @@ class AsymmetricView extends StatelessWidget {
     /// some kinda awkward math so we use _evenCasesIndex and _oddCasesIndex as
     /// helpers for creating the index of the product list that will correspond
     /// to the index of the list of columns.
-    return List.generate(_listItemCount(products.length), (int index) {
+    return List.generate(_listItemCount(hotels.length), (int index) {
       double width = .59 * MediaQuery.of(context).size.width;
       Widget column;
       if (index % 2 == 0) {
         /// Even cases
         int bottom = _evenCasesIndex(index);
         column = TwoProductCardColumn(
-            bottom: products[bottom],
-            top: products.length - 1 >= bottom + 1
-                ? products[bottom + 1]
+            bottom: hotels[bottom],
+            top: hotels.length - 1 >= bottom + 1
+                ? hotels[bottom + 1]
                 : null);
         width += 32.0;
       } else {
         /// Odd cases
         column = OneProductCardColumn(
-          product: products[_oddCasesIndex(index)],
+          hotel: hotels[_oddCasesIndex(index)],
         );
       }
       return SizedBox(

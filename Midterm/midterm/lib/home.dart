@@ -16,8 +16,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'model/product.dart';
-import 'model/products_repository.dart';
+//import 'model/product.dart';
+import 'model/hotel.dart';
+//import 'model/products_repository.dart';
+import 'model/hotel_repository.dart';
 
 final Uri _url = Uri.parse('https://www.handong.edu/');
 
@@ -41,9 +43,9 @@ class _HomePage extends State<HomePage> {
   double _aspectRatio = 0.88;
 
   List<Card> _buildGridCards(BuildContext context) {
-    List<Product> products = ProductsRepository.loadProducts(Category.all);
+    List<Hotel> hotel = HotelRepository.loadProducts(Category.all);
 
-    if (products.isEmpty) {
+    if (hotel.isEmpty) {
       return const <Card>[];
     }
 
@@ -51,7 +53,7 @@ class _HomePage extends State<HomePage> {
     final NumberFormat formatter = NumberFormat.simpleCurrency(
         locale: Localizations.localeOf(context).toString());
 
-    return products.map((product) {
+    return hotel.map((product) {
       return Card(
         clipBehavior: Clip.antiAlias,
         // TODO: Adjust card heights (103)
@@ -61,35 +63,103 @@ class _HomePage extends State<HomePage> {
           children: <Widget>[
             AspectRatio(
               aspectRatio: 18 / 11,
-              child: Image.asset(
+              child: /*Image.asset(
                 product.assetName,
                 package: product.assetPackage,
                 fit: BoxFit.fitWidth,
+              ),*/
+              Image.asset(
+                product.id,
+                fit: BoxFit.fill,
               ),
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
-                child: Column(
-                  // TODO: Align labels to the bottom and center (103)
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  // TODO: Change innermost Column (103)
-                  children: <Widget>[
-                    // TODO: Handle overflowing labels (103)
-                    Text(
-                      product.name,
-                      style: theme.textTheme.headline6,
-                      maxLines: 1,
+                padding: const EdgeInsets.fromLTRB(7.0, 12.0, 16.0, 8.0),
+                child:
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                      const Padding(
+                        padding: EdgeInsets.only(right: 5,bottom: 10,),
+                        child: Icon(
+                            Icons.place,
+                            color: Colors.blue,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 130,
+                        child: Column(
+                        // TODO: Align labels to the bottom and center (103)
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        // TODO: Change innermost Column (103)
+                        children: <Widget>[
+                          const Icon(
+                              Icons.star,
+                              size: 10,
+                              color: Colors.amberAccent,
+                          ),
+                          // TODO: Handle overflowing labels (103)
+                          Flexible(
+                            child: RichText(
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              strutStyle: const StrutStyle(fontSize: 16),
+                              text: TextSpan(
+                                  text:product.name,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8.0),
+                          Flexible(
+                            child: RichText(
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              strutStyle: const StrutStyle(fontSize: 10),
+                              text: TextSpan(
+                                text:product.location,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 15.0),
+                          Row(
+                            children: <Widget>[
+                              const Spacer(flex: 1,),
+                              SizedBox(
+                                width: 50,
+                                height: 30,
+                                child: TextButton(
+                                  onPressed:(){
+
+                                  },
+                                  child: const Text(
+                                    'more',
+                                    style: TextStyle(
+                                      color: Colors.blue,
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 8.0),
-                    Text(
-                      formatter.format(product.price),
-                      style: theme.textTheme.subtitle2,
-                    ),
+
                   ],
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       );
@@ -146,7 +216,7 @@ class _HomePage extends State<HomePage> {
                   }
                   else{
                     _crossAxisCount = 2;
-                    _aspectRatio = 0.88;
+                    _aspectRatio = 0.78;
                     _viewType = ViewType.grid;
                   }
                   // Respond to button selection
@@ -155,8 +225,7 @@ class _HomePage extends State<HomePage> {
                       _isSelected[i] = i == index;
                       }
                     });
-
-
+                  
                 },
                 color: Colors.black.withOpacity(0.60),
                 selectedColor: Colors.lightBlue,
