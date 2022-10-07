@@ -14,8 +14,7 @@
 
 import 'package:flutter/material.dart';
 
-//import '../model/product.dart';
-import 'product_columns.dart';
+import 'hotel_columns.dart';
 import '../model/hotel.dart';
 
 class AsymmetricView extends StatelessWidget {

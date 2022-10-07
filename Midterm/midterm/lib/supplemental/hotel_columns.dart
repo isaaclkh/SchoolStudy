@@ -14,9 +14,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../model/product.dart';
 import '../model/hotel.dart';
-import 'product_card.dart';
+import 'hotel_card.dart';
 
 class TwoProductCardColumn extends StatelessWidget {
   const TwoProductCardColumn({
@@ -37,7 +36,7 @@ class TwoProductCardColumn extends StatelessWidget {
         builder: (BuildContext context, BoxConstraints constraints) {
       const spacerHeight = 44.0;
 
-      double heightOfCards = (constraints.biggest.height - spacerHeight) / 2.0;
+      double heightOfCards = (constraints.biggest.height - spacerHeight) / 1.9;
       double heightOfImages = heightOfCards - ProductCard.kTextBoxHeight;
       // TODO: Change imageAspectRatio calculation (104)
       double imageAspectRatio = constraints.biggest.width / heightOfImages;

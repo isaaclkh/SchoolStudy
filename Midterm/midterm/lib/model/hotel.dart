@@ -14,11 +14,7 @@
 
 enum Category {
   all,
-  one,
-  two,
-  three,
-  four,
-  five,
+  a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,
 }
 
 class Hotel {
@@ -27,12 +23,18 @@ class Hotel {
     required this.id,
     required this.name,
     required this.location,
+    required this.star,
+    required this.telephone,
+    required this.detail,
   });
 
   final Category category;
   final String id;
   final String name;
   final String location;
+  final int star;
+  final String telephone;
+  final String detail;
 
   //String get assetName => '/assets/hotels/$id.jpg';
   //String get assetPackage => 'hotel_images';

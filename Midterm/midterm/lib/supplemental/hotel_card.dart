@@ -15,7 +15,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-//import '../model/product.dart';
 import '../model/hotel.dart';
 
 class ProductCard extends StatelessWidget {
@@ -57,7 +56,7 @@ class ProductCard extends StatelessWidget {
         ),
         SizedBox(
           height: kTextBoxHeight * MediaQuery.of(context).textScaleFactor,
-          width: 121.0,
+          width: 128.0,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,

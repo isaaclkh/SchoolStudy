@@ -20,6 +20,7 @@ import 'signupPage.dart';
 import 'search.dart';
 import 'favoriteHotel.dart';
 import 'mymypage.dart';
+import 'detail.dart';
 
 // TODO: Convert ShrineApp to stateful widget (104)
 class ShrineApp extends StatelessWidget {
@@ -44,6 +45,7 @@ class ShrineApp extends StatelessWidget {
         '/search': (BuildContext context) => const SearchPage(),
         '/list': (BuildContext context) => const FavoriteHotel(),
         '/go': (BuildContext context) => const MyPage(),
+        '/detail': (BuildContext context) => const DetailPage(),
       },
       debugShowCheckedModeBanner: false,
       // TODO: Add a theme (103)

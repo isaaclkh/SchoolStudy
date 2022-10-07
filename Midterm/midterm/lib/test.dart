@@ -18,6 +18,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'model/hotel.dart';
 import 'model/hotel_repository.dart';
+import 'supplemental/hotel_card.dart';
 
 final Uri _url = Uri.parse('https://www.handong.edu/');
 
@@ -38,7 +39,7 @@ class _HomePage extends State<HomePage> {
   final List<bool> _isSelected = <bool>[false, true];
   ViewType _viewType = ViewType.grid;
   int _crossAxisCount = 2;
-  double _aspectRatio = 0.88;
+  double _aspectRatio = 0.78;
 
   List<Card> _buildGridCards(BuildContext context) {
     List<Hotel> hotel = HotelRepository.loadProducts(Category.all);
@@ -53,127 +54,102 @@ class _HomePage extends State<HomePage> {
 
     return hotel.map((hotel) {
       return Card(
-        elevation: 2.0,
         clipBehavior: Clip.antiAlias,
         // TODO: Adjust card heights (103)
         child: (_viewType == ViewType.list)
-        ? Container( // If it is list view
-            margin: const EdgeInsets.all(5),
-            child: Row(
-              children: <Widget>[
-                const SizedBox(width: 5,),
-                SizedBox(
-                  width: 80,
-                  height: 70,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4.0),
-                    child: Image.asset(
-                      hotel.id,
-                      fit: BoxFit.fill,
+            ? Container(
+          margin: const EdgeInsets.all(5),
+          child: Row(
+            children: <Widget>[
+              SizedBox(
+                width: 200,
+                height: 100,
+                child: Image.asset(
+                  hotel.id,
+                  fit: BoxFit.fill,
+                ),
+              ),
+              const SizedBox(width: 5,),
+              Column(
+                children: <Widget>[
+                  Flexible(
+                    child: RichText(
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      strutStyle: const StrutStyle(fontSize: 16),
+                      text: TextSpan(
+                        text:hotel.name,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 20,),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                  SizedBox(
-                  width: MediaQuery.of(context).size.width - 200,
-                  height: 70,
-                  child: Column(
-                    // TODO: Align labels to the bottom and center (103)
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    // TODO: Change innermost Column (103)
-                    children: <Widget>[
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: List.generate(hotel.star, (int index){
-                          return const Icon(
-                            Icons.star,
-                            size: 10,
-                            color: Colors.yellow,
-                          );
-                        }),
-                      ),
-                      // TODO: Handle overflowing labels (103)
-                      Flexible(
-                        child: Text(
-                          hotel.name,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  const SizedBox(height: 5.0),
+                  Flexible(
+                    child: RichText(
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      strutStyle: const StrutStyle(fontSize: 10),
+                      text: TextSpan(
+                        text:hotel.location,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 10,
                         ),
                       ),
-                      const SizedBox(height: 5.0),
-                      Flexible(
-                        child: Text(
-                          hotel.location,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                          style: const TextStyle(
-                            fontSize: 10,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                  ),
-                  ],
-                ),
-              ],
-            ),
+
+                ],
+              ),
+            ],
+          ),
         ) :
-        Column( // If it is column view
+        Column(
           // TODO: Center items on the card (103)
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             AspectRatio(
               aspectRatio: 18 / 11,
-              child:
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4.0),
-                child: Image.asset(
-                  hotel.id,
-                  fit: BoxFit.fill,
-                ),
+              child: /*Image.asset(
+                product.assetName,
+                package: product.assetPackage,
+                fit: BoxFit.fitWidth,
+              ),*/
+              Image.asset(
+                hotel.id,
+                fit: BoxFit.fill,
               ),
             ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(7.0, 12.0, 16.0, 8.0),
                 child:
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                      const Padding(
-                        padding: EdgeInsets.only(right: 5,bottom: 10,),
-                        child: Icon(
-                            Icons.place,
-                            color: Colors.blue,
-                            size: 10,
-                        ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    const Padding(
+                      padding: EdgeInsets.only(right: 5,bottom: 10,),
+                      child: Icon(
+                        Icons.place,
+                        color: Colors.blue,
                       ),
-                      SizedBox(
-                        width: 100,
-                        height: 150,
-                        child: Column(
+                    ),
+                    SizedBox(
+                      width: 120,
+                      height: 100,
+                      child: Column(
                         // TODO: Align labels to the bottom and center (103)
                         crossAxisAlignment: CrossAxisAlignment.start,
                         // TODO: Change innermost Column (103)
                         children: <Widget>[
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: List.generate(hotel.star, (int index){
-                                return const Icon(
-                                    Icons.star,
-                                    size: 10,
-                                    color: Colors.yellow,
-                                );
-                              },
-                            ),
+                          const Icon(
+                            Icons.star,
+                            size: 10,
+                            color: Colors.amberAccent,
                           ),
                           // TODO: Handle overflowing labels (103)
                           Flexible(
@@ -182,12 +158,12 @@ class _HomePage extends State<HomePage> {
                               maxLines: 1,
                               strutStyle: const StrutStyle(fontSize: 14),
                               text: TextSpan(
-                                  text:hotel.name,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                  ),
+                                text:hotel.name,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
                               ),
                             ),
                           ),
@@ -206,9 +182,48 @@ class _HomePage extends State<HomePage> {
                               ),
                             ),
                           ),
+                          /*Container(
+                            alignment: Alignment.bottomRight,
+                            child: TextButton(
+                              onPressed: () {
+
+                              },
+                              child: Text(
+                                'more',
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 10,
+                                ),
+                              ),
+
+                            ),
+                          ),
+                          const SizedBox(height: 15.0),
+                          Row(
+                            children: <Widget>[
+                              const Spacer(flex: 1,),
+                              SizedBox(
+                                width: 50,
+                                height: 30,
+                                child: TextButton(
+                                  onPressed:(){
+
+                                  },
+                                  child: const Text(
+                                    'more',
+                                    style: TextStyle(
+                                      color: Colors.blue,
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),*/
                         ],
                       ),
                     ),
+
                   ],
                 ),
               ),
@@ -260,25 +275,25 @@ class _HomePage extends State<HomePage> {
               alignment: Alignment.topRight,
               margin: const EdgeInsets.only(top:10, right: 10),
               child:
-                ToggleButtons(
+              ToggleButtons(
                 onPressed: (int index) {
                   if(index==0){
                     _crossAxisCount = 1;
-                    _aspectRatio = 3.5;
+                    _aspectRatio = 1;
                     _viewType = ViewType.list;
                   }
                   else{
                     _crossAxisCount = 2;
-                    _aspectRatio = 0.88;
+                    _aspectRatio = 0.78;
                     _viewType = ViewType.grid;
                   }
                   // Respond to button selection
                   setState(() {
                     for (int i = 0; i < _isSelected.length; i++) {
                       _isSelected[i] = i == index;
-                      }
-                    });
-                  
+                    }
+                  });
+
                 },
                 color: Colors.black.withOpacity(0.60),
                 selectedColor: Colors.lightBlue,
@@ -298,18 +313,18 @@ class _HomePage extends State<HomePage> {
             ),
             Expanded(
               child:
-                  OrientationBuilder(
-                    builder: (context, orientation) {
+              OrientationBuilder(
+                  builder: (context, orientation) {
                     return GridView.count(
-                      crossAxisCount: orientation == Orientation.portrait? _crossAxisCount : 3,
+                      crossAxisCount: orientation == Orientation.portrait ? _crossAxisCount : 3,
                       padding: const EdgeInsets.all(16.0),
                       childAspectRatio: _aspectRatio,
                       children: _buildGridCards(context),
-                  );
-                }
+                    );
+                  }
               ),
             ),
-          ],
+          ]
       ),
 
       resizeToAvoidBottomInset: false,
