@@ -20,21 +20,38 @@ import 'model/hotel.dart';
 import 'model/hotel_repository.dart';
 import 'detail.dart';
 
-class MyPage extends StatelessWidget {
+class MyPage extends StatefulWidget{
   const MyPage({Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _MyPage();
+
+}
+
+class _MyPage extends State<MyPage> {
+  bool empty = false;
 
   List<Card> _buildGridCards(BuildContext context) {
 
     if (saving.isEmpty) {
-      return const <Card>[];
+      empty = true;
     }
 
     return saving.map((hotel) {
+      if(empty){
+        <Card>[];
+      }
       return Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50),
         ),
-        child: Image.asset(hotel.id),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: Image.asset(
+              hotel.id,
+              fit: BoxFit.fill,
+          ),
+        ),
       );
     }).toList();
   }
@@ -89,18 +106,20 @@ class MyPage extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
-                height: 100,
-                child: GridView.count(
-                  padding: const EdgeInsets.all(16.0),
-                  childAspectRatio: 0.88,
-                  crossAxisCount: 1,
-                  children: _buildGridCards(context),
-                ),
-              ),
+              const SizedBox(height: 10,),
             ],
           ),
-
+          SizedBox(
+            //height: saving.length * 200,
+            height: 500,
+            child: GridView.count(
+              padding: const EdgeInsets.all(0),
+              childAspectRatio: 2,
+              crossAxisCount: 1,
+              children: _buildGridCards(context),
+              physics: NeverScrollableScrollPhysics(),
+            ),
+          ),
         ],
       ),
     );

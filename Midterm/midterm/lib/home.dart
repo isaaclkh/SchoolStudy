@@ -467,8 +467,16 @@ class _HomePage extends State<HomePage> {
                   },
                   // Show a red background as the item is swiped away.
                   background: Container(color: Colors.red),
-                  child: ListTile(
-                    title: Text(item),
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 20, top: 10,),
+                    child: ListTile(
+                      title: Text(
+                        item,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
                 );
               },
