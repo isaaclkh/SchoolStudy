@@ -13,7 +13,11 @@
 // limitations under the License.
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 // stores ExpansionPanel state information
+
+final filters = <String>{};
+
 class Item {
   Item({
     required this.headerValue,
@@ -32,15 +36,68 @@ List<Item> generateItems(int numberOfItems) {
   });
 }
 
-class SearchPage extends StatefulWidget {
-  const SearchPage({Key? key}) : super(key: key);
+class SearchPage extends StatefulWidget{
+  const SearchPage({Key? key, this.restorationId}) : super(key: key);
+  final String? restorationId;
 
   @override
   State<SearchPage> createState() => _SearchPage();
 }
 
-class _SearchPage extends State<SearchPage> {
+class _SearchPage extends State<SearchPage> with RestorationMixin{
   final List<Item> _data = generateItems(1);
+  @override
+  String? get restorationId => widget.restorationId;
+  late String selectedDate = "Not selected.";
+  late String selectedFilters = "Not selected.";
+
+  final RestorableDateTime _selectedDate =
+  RestorableDateTime(DateTime.now());
+  late final RestorableRouteFuture<DateTime?> _restorableDatePickerRouteFuture =
+  RestorableRouteFuture<DateTime?>(
+    onComplete: _selectDate,
+    onPresent: (NavigatorState navigator, Object? arguments) {
+      return navigator.restorablePush(
+        _datePickerRoute,
+        arguments: _selectedDate.value.millisecondsSinceEpoch,
+      );
+    },
+  );
+
+  static Route<DateTime> _datePickerRoute(
+      BuildContext context,
+      Object? arguments,
+      ) {
+    return DialogRoute<DateTime>(
+      context: context,
+      builder: (BuildContext context) {
+        return DatePickerDialog(
+          restorationId: 'date_picker_dialog',
+          initialEntryMode: DatePickerEntryMode.calendarOnly,
+          initialDate: DateTime.fromMillisecondsSinceEpoch(arguments! as int),
+          firstDate: DateTime(2022),
+          lastDate: DateTime(2030),
+        );
+      },
+    );
+  }
+
+  @override
+  void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
+    registerForRestoration(_selectedDate, 'selected_date');
+    registerForRestoration(
+        _restorableDatePickerRouteFuture, 'date_picker_route_future');
+  }
+
+  void _selectDate(DateTime? newSelectedDate) {
+    if (newSelectedDate != null) {
+      setState(() {
+        _selectedDate.value = newSelectedDate;
+        String dateFormat = DateFormat('yyyy.MMM.d (EE)').format(newSelectedDate);
+        selectedDate = dateFormat;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,12 +135,24 @@ class _SearchPage extends State<SearchPage> {
                                  ),
                                  Container(
                                    padding: const EdgeInsets.only(left: 30,),
-                                   child: const Text('2022.10.03 (MON)\n11:19 pm', style: TextStyle(fontWeight: FontWeight.w300, fontSize: 10, color: Colors.grey,),),
+                                   child: Text(selectedDate, style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 10, color: Colors.grey,),),
                                  ),
                                ],
                              ),
                            ),
-                           const Text('Select date'),
+                           Container(
+                             margin: EdgeInsets.only(right: 10,),
+                             child: OutlinedButton(
+                               onPressed: () {
+                                 _restorableDatePickerRouteFuture.present();
+                               },
+                               style: ButtonStyle(
+                                 backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                                  return Colors.lightBlueAccent;},),
+                               ),
+                               child: const Text('Open Date Picker', style: TextStyle(color: Colors.black,),),
+                             ),
+                           ),
                          ],
                        ),
                      ],
@@ -127,7 +196,60 @@ class _SearchPage extends State<SearchPage> {
                         ),
                       ),
                       titlePadding: const EdgeInsets.all(0),
-                      content: const Text('Content :)', textAlign: TextAlign.center,),
+                      content:
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              const Icon(
+                                Icons.wifi,
+                                size: 20,
+                                color: Colors.lightBlue,
+                              ),
+                              const SizedBox(width: 10,),
+                              Flexible(
+                                child: Text(
+                                  selectedFilters = filters.map((e){
+                                    return e;
+                                  }).toString(),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 15,),
+                          Row(
+                            children: <Widget>[
+                              const Icon(
+                                Icons.calendar_month,
+                                size: 20,
+                                color: Colors.lightBlue,
+                              ),
+                              const SizedBox(width: 10,),
+                              const Text(
+                                "IN",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(width: 10,),
+                              Text(
+                                selectedDate,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                       actions: <Widget>[
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -232,6 +354,12 @@ class _Filter extends State<Filter> {
               onChanged: (bool? value) {
                 setState(() {
                   isChecked[0] = value!;
+                  if(isChecked[0]){
+                    filters.add('No Kids Zone');
+                  }
+                  else{
+                    filters.remove('No Kids Zone');
+                  }
                 });
               },
             ),
@@ -248,6 +376,12 @@ class _Filter extends State<Filter> {
               onChanged: (bool? value) {
                 setState(() {
                   isChecked[1] = value!;
+                  if(isChecked[1]){
+                    filters.add('Pet-Friendly');
+                  }
+                  else{
+                    filters.remove('Pet-Friendly');
+                  }
                 });
               },
             ),
@@ -266,6 +400,12 @@ class _Filter extends State<Filter> {
               onChanged: (bool? value) {
                 setState(() {
                   isChecked[2] = value!;
+                  if(isChecked[2]){
+                    filters.add('Free breakfast');
+                  }
+                  else{
+                    filters.remove('Free breakfast');
+                  }
                 });
               },
             ),

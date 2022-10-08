@@ -16,11 +16,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'detail.dart';
 import 'model/hotel.dart';
 import 'model/hotel_repository.dart';
 
 final Uri _url = Uri.parse('https://www.handong.edu/');
-
 
 const List<Widget> togglebut = <Widget>[
   Icon(Icons.list, size: 20,),
@@ -67,9 +67,12 @@ class _HomePage extends State<HomePage> {
                   height: 70,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(4.0),
-                    child: Image.asset(
-                      hotel.id,
-                      fit: BoxFit.fill,
+                    child: Hero(
+                      tag: 'hero-${hotel.category}',
+                      child: Image.asset(
+                        hotel.id,
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
                 ),
@@ -79,7 +82,7 @@ class _HomePage extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                   SizedBox(
-                  width: MediaQuery.of(context).size.width - 200,
+                  width: MediaQuery.of(context).size.width - 219,
                   height: 70,
                   child: Column(
                     // TODO: Align labels to the bottom and center (103)
@@ -123,6 +126,24 @@ class _HomePage extends State<HomePage> {
                   ),
                   ],
                 ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.all(0),
+                      textStyle: TextStyle(fontSize: 15),
+                    ),
+                    onPressed: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Detail(hotel.category,)
+                        ),
+                      );
+                    },
+                    child: Text('more',),
+                  ),
+                ),
               ],
             ),
         ) :
@@ -135,9 +156,12 @@ class _HomePage extends State<HomePage> {
               child:
               ClipRRect(
                 borderRadius: BorderRadius.circular(4.0),
-                child: Image.asset(
-                  hotel.id,
-                  fit: BoxFit.fill,
+                child: Hero(
+                  tag: 'hero-${hotel.category}',
+                  child: Image.asset(
+                    hotel.id,
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
             ),
@@ -145,20 +169,21 @@ class _HomePage extends State<HomePage> {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(7.0, 12.0, 16.0, 8.0),
                 child:
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
+                    Stack(
+                      //mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
                       const Padding(
-                        padding: EdgeInsets.only(right: 5,bottom: 10,),
+                        padding: EdgeInsets.only(right: 5, top: 30,),
                         child: Icon(
                             Icons.place,
                             color: Colors.blue,
-                            size: 10,
+                            size: 15,
                         ),
                       ),
-                      SizedBox(
-                        width: 100,
-                        height: 150,
+                      Container(
+                        margin: EdgeInsets.only(left: 20,),
+                        width: 130,
+                        height: 200,
                         child: Column(
                         // TODO: Align labels to the bottom and center (103)
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,11 +216,11 @@ class _HomePage extends State<HomePage> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 5.0),
+                          const SizedBox(height: 3.0),
                           Flexible(
                             child: RichText(
                               overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
+                              maxLines: 1,
                               strutStyle: const StrutStyle(fontSize: 8),
                               text: TextSpan(
                                 text:hotel.location,
@@ -211,6 +236,26 @@ class _HomePage extends State<HomePage> {
                     ),
                   ],
                 ),
+              ),
+            ),
+            Container(
+              alignment: Alignment.bottomRight,
+              margin: EdgeInsets.only(bottom: 7,),
+              height: 20,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.all(0),
+                  textStyle: TextStyle(fontSize: 15),
+                ),
+                  onPressed: (){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Detail(hotel.category,)
+                        ),
+                    );
+                  },
+                child: Text('more',),
               ),
             ),
           ],
@@ -355,9 +400,7 @@ class _HomePage extends State<HomePage> {
               leading: const Icon(Icons.location_city, color: Colors.lightBlue,),
               contentPadding: const EdgeInsets.fromLTRB(40, 5, 5, 5),
               title: const Text('Favorite Hotel'),
-              onTap: () {
-                Navigator.pushNamed(context, '/list');
-              },
+              onTap: _pushSaved,
             ),
             ListTile(
               leading: const Icon(Icons.person, color: Colors.lightBlue,),
@@ -377,6 +420,61 @@ class _HomePage extends State<HomePage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _pushSaved() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) {
+          final tiles = saved.map(
+                (pair) {
+              return ListTile(
+                title: Text(
+                  pair,
+                ),
+              );
+            },
+          );
+          final divided = tiles.isNotEmpty
+              ? ListTile.divideTiles(
+            context: context,
+            tiles: tiles,
+          ).toList()
+              : <Widget>[];
+
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Favorite Hotels'),
+            ),
+            body: //ListView(children: divided),
+            ListView.builder(
+              itemCount: saved.length,
+              itemBuilder: (context, index) {
+                final item = saved.elementAt(index);
+                return Dismissible(
+                  // Each Dismissible must contain a Key. Keys allow Flutter to
+                  // uniquely identify widgets.
+                  key: Key(item),
+                  // Provide a function that tells the app
+                  // what to do after an item has been swiped away.
+                  onDismissed: (direction) {
+                    // Remove the item from the data source.
+                    setState(() {
+                      saved.remove(item);
+                    });
+                  },
+                  // Show a red background as the item is swiped away.
+                  background: Container(color: Colors.red),
+                  child: ListTile(
+                    title: Text(item),
+                  ),
+                );
+              },
+            ),
+          );
+        },
       ),
     );
   }

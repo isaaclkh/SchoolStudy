@@ -18,9 +18,7 @@ import 'home.dart';
 import 'login.dart';
 import 'signupPage.dart';
 import 'search.dart';
-import 'favoriteHotel.dart';
 import 'mymypage.dart';
-import 'detail.dart';
 
 // TODO: Convert ShrineApp to stateful widget (104)
 class ShrineApp extends StatelessWidget {
@@ -32,26 +30,16 @@ class ShrineApp extends StatelessWidget {
       title: 'Shrine',
       initialRoute: '/login',
       theme: ThemeData(
-        primaryColor: Colors.black,
+        primaryColor: Colors.lightBlue,
       ),
       routes: {
         '/login': (BuildContext context) => const LoginPage(),
-        // TODO: Change to a Backdrop with a HomePage frontLayer (104)
-        '/': (BuildContext context) => HomePage(),
-        // TODO: Make currentCategory field take _currentCategory (104)
-        // TODO: Pass _currentCategory for frontLayer (104)
-        // TODO: Change backLayer field value to CategoryMenuPage (104)
+        '/': (BuildContext context) => const HomePage(),
         '/signup': (BuildContext context) => const SignupPage(),
-        '/search': (BuildContext context) => const SearchPage(),
-        '/list': (BuildContext context) => const FavoriteHotel(),
+        '/search': (BuildContext context) => const SearchPage(restorationId: 'main'),
         '/go': (BuildContext context) => const MyPage(),
-        '/detail': (BuildContext context) => const DetailPage(),
       },
       debugShowCheckedModeBanner: false,
-      // TODO: Add a theme (103)
     );
   }
 }
-
-// TODO: Build a Shrine Theme (103)
-// TODO: Build a Shrine Text Theme (103)

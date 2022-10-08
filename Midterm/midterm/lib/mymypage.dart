@@ -13,190 +13,98 @@
 // limitations under the License.
 
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:intl/intl.dart';
 
-import 'model/product.dart';
-import 'model/products_repository.dart';
+import 'model/hotel.dart';
+import 'model/hotel_repository.dart';
+import 'detail.dart';
 
 class MyPage extends StatelessWidget {
   const MyPage({Key? key}) : super(key: key);
 
   List<Card> _buildGridCards(BuildContext context) {
-    List<Product> products = ProductsRepository.loadProducts(Category.all);
 
-    if (products.isEmpty) {
+    if (saving.isEmpty) {
       return const <Card>[];
     }
 
-    final ThemeData theme = Theme.of(context);
-    final NumberFormat formatter = NumberFormat.simpleCurrency(
-        locale: Localizations.localeOf(context).toString());
-
-    return products.map((product) {
+    return saving.map((hotel) {
       return Card(
-        clipBehavior: Clip.antiAlias,
-        // TODO: Adjust card heights (103)
-        child: Column(
-          // TODO: Center items on the card (103)
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            AspectRatio(
-              aspectRatio: 18 / 11,
-              child: Image.asset(
-                product.assetName,
-                package: product.assetPackage,
-                fit: BoxFit.fitWidth,
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
-                child: Column(
-                  // TODO: Align labels to the bottom and center (103)
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  // TODO: Change innermost Column (103)
-                  children: <Widget>[
-                    // TODO: Handle overflowing labels (103)
-                    Text(
-                      product.name,
-                      style: theme.textTheme.headline6,
-                      maxLines: 1,
-                    ),
-                    const SizedBox(height: 8.0),
-                    Text(
-                      formatter.format(product.price),
-                      style: theme.textTheme.subtitle2,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
         ),
+        child: Image.asset(hotel.id),
       );
     }).toList();
   }
 
-  // TODO: Add a variable for Category (104)
+
   @override
   Widget build(BuildContext context) {
-    // TODO: Return an AsymmetricView (104)
-    // TODO: Pass Category variable to AsymmetricView (104)
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SHRINE'),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(
-              Icons.search,
-              semanticLabel: 'search',
-            ),
-            onPressed: () {
-              print('Search button');
-            },
-          ),
-          IconButton(
-            icon: const Icon(
-              Icons.tune,
-              semanticLabel: 'filter',
-            ),
-            onPressed: () {
-              print('Filter button');
-            },
-          ),
-        ],
+        title: const Text('My Page'),
+        centerTitle: true,
       ),
-      body: GridView.count(
-        crossAxisCount: 2,
-        padding: const EdgeInsets.all(16.0),
-        childAspectRatio: 8.0 / 9.0,
-        children: _buildGridCards(context),
-      ),
-      resizeToAvoidBottomInset: false,
+      body: ListView(
+        children: <Widget>[
+          const SizedBox(height: 30,),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                height: 200,
+                width: 200,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(100)),
+                ),
+                child: ClipOval(
+                  child: Lottie.asset('assets/coding.json', fit: BoxFit.cover),
+                ),
+              ),
+              const SizedBox(height: 5,),
+              const Text(
+                'Keonho Lim',
+                style: TextStyle(
+                  fontSize:15,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Text(
+                '21800612',
+                style: TextStyle(
+                  fontSize:15,
+                  color: Colors.grey,
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(left: 20, top: 40,),
+                alignment: Alignment.centerLeft,
+                child: const Text(
+                  'My Favorite Hotel List',
+                  style: TextStyle(
+                    fontSize:20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Container(
+                height: 100,
+                child: GridView.count(
+                  padding: const EdgeInsets.all(16.0),
+                  childAspectRatio: 0.88,
+                  crossAxisCount: 1,
+                  children: _buildGridCards(context),
+                ),
+              ),
+            ],
+          ),
 
-      drawer: Drawer(
-        // Add a ListView to the drawer. This ensures the user can scroll
-        // through the options in the drawer if there isn't enough vertical
-        // space to fit everything.
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              child: Stack(
-                children: const [
-                  Positioned(
-                    bottom: 10.0,
-                    left: 30.0,
-                    child: Text(
-                      "Pages",
-                      style: TextStyle(color: Colors.white, fontSize: 28),
-                    ),
-                  )
-                ],
-              ),
-              decoration: const BoxDecoration(
-                color: Colors.blue,
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.home, color: Colors.lightBlue,),
-              contentPadding: const EdgeInsets.fromLTRB(40, 5, 5, 5),
-              title: const Text('Home'),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pushNamed(context, '/');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.search, color: Colors.lightBlue,),
-              contentPadding: const EdgeInsets.fromLTRB(40, 5, 5, 5),
-              title: const Text('Search'),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pushNamed(context, '/search');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.location_city, color: Colors.lightBlue,),
-              contentPadding: const EdgeInsets.fromLTRB(40, 5, 5, 5),
-              title: const Text('Favorite Hotel'),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pushNamed(context, '/list');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.person, color: Colors.lightBlue,),
-              contentPadding: const EdgeInsets.fromLTRB(40, 5, 5, 5),
-              title: const Text('My Page'),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pushNamed(context, '/go');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.logout, color: Colors.lightBlue,),
-              contentPadding: const EdgeInsets.fromLTRB(40, 5, 5, 5),
-              title: const Text('Log Out'),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pushNamed(context, '/login');
-              },
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }
+
+
 }

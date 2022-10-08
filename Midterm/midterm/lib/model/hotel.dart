@@ -26,6 +26,7 @@ class Hotel {
     required this.star,
     required this.telephone,
     required this.detail,
+    required this.page,
   });
 
   final Category category;
@@ -35,6 +36,7 @@ class Hotel {
   final int star;
   final String telephone;
   final String detail;
+  final String page;
 
   //String get assetName => '/assets/hotels/$id.jpg';
   //String get assetPackage => 'hotel_images';
