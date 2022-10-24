@@ -14,10 +14,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:intl/intl.dart';
-
-import 'model/hotel.dart';
-import 'model/hotel_repository.dart';
 import 'detail.dart';
 
 class MyPage extends StatefulWidget{
@@ -45,12 +41,41 @@ class _MyPage extends State<MyPage> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50),
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(50),
-          child: Image.asset(
-              hotel.id,
-              fit: BoxFit.fill,
-          ),
+        child: Stack(
+          children: <Widget>[
+            ClipRRect(
+              borderRadius: BorderRadius.circular(50),
+              child: InkWell(
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Detail(hotel.category,)
+                    ),
+                  );
+                },
+                child: Image.asset(
+                  hotel.id,
+                  fit: BoxFit.fill,
+                  height: 200,
+                  width: 400,
+                ),
+              ),
+            ),
+            Container(
+              alignment: Alignment.bottomCenter,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Text(hotel.name,style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20,),),
+                  Text(hotel.location, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10,)),
+                  const SizedBox(height: 20,),
+                ],
+              ),
+            ),
+          ],
         ),
       );
     }).toList();
@@ -110,13 +135,12 @@ class _MyPage extends State<MyPage> {
             ],
           ),
           SizedBox(
-            //height: saving.length * 200,
-            height: 500,
+            height: saving.length * 200,
             child: GridView.count(
               padding: const EdgeInsets.all(0),
               childAspectRatio: 2,
               crossAxisCount: 1,
-              children: _buildGridCards(context),
+              children: empty? <Card>[] : _buildGridCards(context),
               physics: NeverScrollableScrollPhysics(),
             ),
           ),

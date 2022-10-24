@@ -453,6 +453,7 @@ class _HomePage extends State<HomePage> {
               itemCount: saved.length,
               itemBuilder: (context, index) {
                 final item = saved.elementAt(index);
+                final it = saving.elementAt(index);
                 return Dismissible(
                   // Each Dismissible must contain a Key. Keys allow Flutter to
                   // uniquely identify widgets.
@@ -463,6 +464,7 @@ class _HomePage extends State<HomePage> {
                     // Remove the item from the data source.
                     setState(() {
                       saved.remove(item);
+                      saving.remove(it);
                     });
                   },
                   // Show a red background as the item is swiped away.
