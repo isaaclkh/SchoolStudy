@@ -27,14 +27,23 @@ class HomePage extends StatelessWidget {
   List<Card> _buildGridCards(BuildContext context) {
     List<Product> products = ProductsRepository.loadProducts(Category.all);
 
+    FirebaseFirestore db = FirebaseFirestore.instance;
+
     if (products.isEmpty) {
       return const <Card>[];
     }
-
     final ThemeData theme = Theme.of(context);
     final NumberFormat formatter = NumberFormat.simpleCurrency(
         locale: Localizations.localeOf(context).toString());
 
+    db.collection("products").get().then(
+          (res) => print("Successfully completed"),
+      onError: (e) => print("Error completing: $e"),
+    );
+
+    var data = FirebaseFirestore.instance.collection('products').get();
+    data.then((value) => print(value.docs.map((doc)=>doc.data())));
+    //products.map((product) {
     return products.map((product) {
       return Card(
         clipBehavior: Clip.antiAlias,
@@ -80,6 +89,8 @@ class HomePage extends StatelessWidget {
     }).toList();
   }
 
+
+
   // TODO: Add a variable for Category (104)
   @override
   Widget build(BuildContext context) {
@@ -94,7 +105,7 @@ class HomePage extends StatelessWidget {
             semanticLabel: 'profile',
           ),
           onPressed: () {
-            FirebaseAuth.instance.signOut();
+            Navigator.pushNamed(context, '/mypage');
           },
         ),
         title: const Text('Main'),
@@ -114,7 +125,7 @@ class HomePage extends StatelessWidget {
         crossAxisCount: 2,
         padding: const EdgeInsets.all(16.0),
         childAspectRatio: 8.0 / 9.0,
-        children: _buildGridCards(context),
+        children:_buildGridCards(context),
       ),
       resizeToAvoidBottomInset: false,
     );

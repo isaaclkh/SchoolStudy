@@ -1,10 +1,15 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart';
+import 'package:provider/provider.dart';
+import 'package:shrine/main.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class AddPage extends StatefulWidget {
   const AddPage({Key? key}) : super(key: key);
@@ -17,8 +22,12 @@ class _AddPageState extends State<AddPage> {
   final _name = TextEditingController();
   final _price = TextEditingController();
   final _discript = TextEditingController();
+  String _imageurl = "";
 
   firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance;
+  FirebaseFirestore db = FirebaseFirestore.instance;
+  final storageRef = FirebaseStorage.instance.ref();
+
 
   File? _image;
 
@@ -32,19 +41,25 @@ class _AddPageState extends State<AddPage> {
     });
   }
 
-  Future uploadFile() async {
-    if (_image == null) return;
-    final fileName = basename(_image!.path);
-    final destination = 'files/$fileName';
-
-    try {
-      final ref = firebase_storage.FirebaseStorage.instance
-          .ref(destination)
-          .child('file/');
-      await ref.putFile(_image!);
-    } catch (e) {
-      print('error occured');
+  Future<String> uploadFile() async {
+    if (_image == null) {
+      _imageurl = 'https://handong.edu/site/handong/res/img/logo.png';
     }
+    final name = _name.text;
+    final destination = '/$name';
+
+    final ref = firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child(destination);
+    await ref.putFile(_image!);
+
+    String down = await ref.getDownloadURL();
+
+    setState(() {
+      _imageurl = down;
+    });
+
+    return down;
   }
 
   @override
@@ -68,8 +83,25 @@ class _AddPageState extends State<AddPage> {
             padding: const EdgeInsets.only(right: 10,),
             child: TextButton(
               child: const Text('Save', style: TextStyle(color: Colors.white, fontSize: 15,),),
-              onPressed: () {
+              onPressed: () async {
+                uploadFile();
+                String name = _name.text;
+                final imageUrl = await storageRef.child(name).getDownloadURL();
+                final product = <String, dynamic>{
+                  "name" : _name.text,
+                  "price" : _price.text,
+                  "discript" : _discript.text,
+                  "imageurl" : imageUrl,
+                  'timestamp': DateTime.now().millisecondsSinceEpoch,
+                  'userId': FirebaseAuth.instance.currentUser!.uid,
+                };
 
+                db
+                    .collection("products")
+                    .doc(_name.text)
+                    .set(product)
+                    .onError((e, _) => print("Error writing document: $e"));
+                Navigator.pop(context);
               },
             ),
           ),
@@ -94,10 +126,8 @@ class _AddPageState extends State<AddPage> {
               :const Center(
                 child: Icon(Icons.image, color: Colors.grey, size: 100,),
               ),
-
               onTap: (){
                 imgFromGallery();
-                print('$_image');
               },
             ),
           ),
