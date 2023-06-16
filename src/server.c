@@ -38,9 +38,11 @@ int listen_at_port (int portnum)
 	return conn_fd ;
 }
 
-void chatS(int conn_fd) 
+void chatS(int conn_fd, int x, int y)
 {
-	char buf[256] ;
+	char buf[256];
+    char colchar;
+    int rown;
 
 	do {
 		int s ;
@@ -50,9 +52,11 @@ void chatS(int conn_fd)
 			break ;
 
 		buf[s] = '\0' ;
-		printf(">%s\n", buf) ;
+		// printf(">%s\n", buf) ;
+        // buf를 sscanf(buf, "%c%d", &colchar, &rown) 이렇게 받아와서
+        // server = 1, client = 2, buf is from client so it is 2
+        // board[changeCharToInt(colchar)][rown] = 2;
 
-		
 		fgets(buf, 256, stdin) ;
 		buf[strlen(buf) - 1] = '\0' ;
 		if (strcmp(buf, "quit()") == 0)
@@ -61,6 +65,39 @@ void chatS(int conn_fd)
 		send(conn_fd, buf, strlen(buf), 0) ;
 
 	} while (strcmp(buf, "quit()") != 0) ;
+}
+
+int changeCharToInt(char c){
+    switch (c){
+        case A:
+            return 0;
+            break;
+        case B:
+            return 1;
+            break;
+        case C:
+            return 2;
+            break;
+        case D:
+            return 3;
+            break;
+        case E:
+            return 4;
+            break;
+        case F:
+            return 5;
+            break;
+        case G:
+            return 6;
+            break;
+        case H:
+            return 7;
+            break;
+
+        default:
+            return -1;
+            break;
+    }
 }
 
 

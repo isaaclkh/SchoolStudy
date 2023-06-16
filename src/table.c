@@ -40,3 +40,12 @@ void reversiSetting(int y1, int x1, int y2, int x2, int row, int col)
     mvaddch(y1, x2, ACS_URCORNER);
     mvaddch(y2, x2, ACS_LRCORNER);
 }
+
+void drawing(){
+    for(int i=0; i<8; i++){
+        for(int j=0; j<8; j++){
+            if(board[i][j] == 1); // white rect
+            if(board[i][j] == 2); // black rect
+        }
+    }
+}

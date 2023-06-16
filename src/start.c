@@ -10,5 +10,9 @@ void checkSize(int row, int col){
 }
 
 void initial(){
-
+    // board[col][row]
+    board[3][3] = 2;
+    board[4][3] = 1;
+    board[3][4] = 1;
+    board[4][4] = 2;
 }

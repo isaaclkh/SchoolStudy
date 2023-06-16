@@ -1,9 +1,14 @@
 #include "reversi.h"
 
+// board[col][row]
+int board[8][8];
+// black(client) : 2, white(server) : 1
+
 int main(int argc, char ** argv)
 {
     int row, col;
     int mode=0; // client : mode 1, server : mode 2
+    int end=0;
 
     struct sockaddr_in serv_addr; 
 	int sock_fd ;
@@ -33,6 +38,7 @@ int main(int argc, char ** argv)
         exit(EXIT_FAILURE) ;
     }
 
+    initial();
 
     initscr();
     clear();
@@ -40,6 +46,7 @@ int main(int argc, char ** argv)
     getmaxyx(stdscr, row, col);
 
     checkSize(row, col);
+    drawing();
 
     noecho();
     cbreak();
@@ -48,11 +55,20 @@ int main(int argc, char ** argv)
     curs_set(3);
 
     int y = 6, x = 7;
+    
     move(y, x);
 
     refresh();
 
-    keyBoardMoving(&y, &x);
+    while(end){
+        drawing();
+
+        if(mode==2) chatS(conn_fd);
+        keyBoardMoving(&y, &x);
+        if(mode==1) chatC(conn_fd);
+        
+    }
+    
 
     shutdown(conn_fd, SHUT_RDWR) ;
 
