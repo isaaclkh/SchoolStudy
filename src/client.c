@@ -32,7 +32,7 @@ int connect_ipaddr_port (const char * ip, int port)
 }
 
 
-void chatC (int conn_fd)
+void chatC (int conn_fd, int x, int y)
 {
 	char buf[256] ;
 
@@ -52,27 +52,4 @@ void chatC (int conn_fd)
 
 		printf(">%s\n", buf) ;
 	} while (strcmp(buf, "quit()") != 0) ;
-}
-
-// int main (int argc, char const ** argv)
-// { 
-// 	struct sockaddr_in serv_addr; 
-// 	int sock_fd ;
-// 	int s, len ;
-// 	char buffer[1024] = {0}; 
-// 	char * data ;
-
-// 	if (argc != 3) {
-// 		fprintf(stderr, "Wrong number of arguments\n") ;
-// 		fprintf(stderr, "Usage: ./chat-sendfirst [IP addr] [Port num]\n") ;
-// 		exit(EXIT_FAILURE) ;
-// 	}
-
-// 	int conn_fd = connect_ipaddr_port(argv[1], atoi(argv[2])) ;
-	
-// 	chat(conn_fd) ;
-
-// 	shutdown(conn_fd, SHUT_RDWR) ;
-
-// 	return EXIT_SUCCESS ;
-// } 
+}å
