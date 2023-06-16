@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <ncurses.h>
-#include <string.h>
+#include "reversi.h"
 
 int main(int argc, char ** argv)
 {
@@ -14,18 +10,19 @@ int main(int argc, char ** argv)
 	int s, len ;
 	char buffer[1024] = {0}; 
 	char * data ;
+    int conn_fd;
     
     // client
     if (argc == 3) {
         mode = 1;
-        int conn_fd = connect_ipaddr_port(argv[1], atoi(argv[2])) ;
+        conn_fd = connect_ipaddr_port(argv[1], atoi(argv[2])) ;
         // chatC(conn_fd) ;
 	}
 
     // server
     if (argc == 2) {
         mode = 2;
-		int conn_fd = listen_at_port(atoi(argv[1])) ;
+		conn_fd = listen_at_port(atoi(argv[1])) ;
 		// chatS(conn_fd) ;
 	}
 
@@ -42,7 +39,7 @@ int main(int argc, char ** argv)
 
     getmaxyx(stdscr, row, col);
 
-    checkSize(int row, int col);
+    checkSize(row, col);
 
     noecho();
     cbreak();
