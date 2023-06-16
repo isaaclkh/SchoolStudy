@@ -1,47 +1,61 @@
-#include "../reversi.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <ncurses.h>
+#include <string.h>
 
-int main(int argc, char ** argv)
+void reversiSetting(int y1, int x1, int y2, int x2, int row, int col)
 {
-    char board[8][8];
-    int playable_direction[8][8][8];
-    
-    int row, col;
-    int mode=0; // mode 1 : client, mode 2 : server
-    int end=0;
+    int w = x2 - x1;
+    int h = y2 - y1;
 
-    struct sockaddr_in serv_addr; 
-	int sock_fd ;
-	int s, len ;
-	char buffer[1024] = {0}; 
-	char * data ;
+    mvprintw(y1 / 2-1, x1 / 2+3, "**** WELCOME TO REVERSI ****");
+    mvprintw(y1 / 2, x1 / 2+3, "opponent has been matched");
+    mvprintw(y1 / 2+1, x1 / 2+3, "You : black stone");
+    mvprintw(y1 / 2+2, x1 / 2+3, "Opponent : white stone");
 
-    // client
-	if (argc == 3) {
-		int conn_fd = connect_ipaddr_port(argv[1], atoi(argv[2]));
-        mode=1;
-        // chatC(conn_fd);
-	}
+    mvhline(y1, x1, ACS_HLINE, w); // first horizontal line
+    mvhline(y2, x1, ACS_HLINE, w); // second horizontal line
 
-    // server
-    if (argc == 2) {
-		int conn_fd = listen_at_port(atoi(argv[1]));
-        mode=2;
-        // chatS(conn_fd);
-	}
+    mvvline(y1, x1, ACS_VLINE, h); // first vertical line
+    mvvline(y1, x2, ACS_VLINE, h); // second vertical line
 
-    // Wrong number of arguments : It should be 2 or 3 ONLY
-    if (argc < 2 || argc > 3){
-        fprintf(stderr, "Wrong number of arguments\n");
-		fprintf(stderr, "Usage:\n\t./reversi [IP addr] [Port num]\n");
-        fprintf(stderr, "\t./reversi [Port num]\n");
-		exit(EXIT_FAILURE);
+    for (int i = 1; i <= 8; i++)
+    {
+        mvhline(y1 + (h / 8 * i), x1, ACS_HLINE, w);
+        mvaddch(y1 + (h / 8 * i), x1, ACS_LTEE);
+        mvaddch(y1 + (h / 8 * i), x2, ACS_RTEE);
     }
+
+    for (int i = 1; i <= 8; i++)
+    {
+        mvvline(y1, x1 + (w / 8 * i), ACS_VLINE, h);
+        mvaddch(y1, x1 + (w / 8 * i), ACS_TTEE);
+        mvaddch(y2, x1 + (w / 8 * i), ACS_BTEE);
+    }
+
+    mvaddch(y1, x1, ACS_ULCORNER);
+    mvaddch(y2, x1, ACS_LLCORNER);
+    mvaddch(y1, x2, ACS_URCORNER);
+    mvaddch(y2, x2, ACS_LRCORNER);
+}
+
+int main()
+{
+    int row, col;
+    char widerWindow[] = "You need wider window";
+    char heigherWindow[] = "You need heigher window";
 
     initscr();
     clear();
 
     getmaxyx(stdscr, row, col);
-    checkSize(row, col);
+
+    if(row < 28) mvprintw(row / 2, (col - strlen(heigherWindow)) / 2, "%s", heigherWindow);
+
+    else if(col < 69) mvprintw(row / 2, (col - strlen(widerWindow)) / 2, "%s", widerWindow);
+
+    else reversiSetting(5, 5, 21, 45, row, col);
 
     noecho();
     cbreak();
@@ -54,16 +68,51 @@ int main(int argc, char ** argv)
 
     refresh();
 
-    while(end)
+    int c;
+    while ((c = getch()) != KEY_F(1))
     {
-        if(mode==1);
-        if(mode==2);
+        switch (c)
+        {
+        case KEY_UP:
+            if (y > 6)
+                y -= 2;
+            if (y == 4)
+                y = 6;
+            break;
+
+        case KEY_DOWN:
+            if (y < 22)
+                y += 2;
+            if (y == 22)
+                y = 20;
+            break;
+
+        case KEY_LEFT:
+            if (x > 7)
+                x -= 5;
+            if (x == 12)
+                x = 7;
+            break;
+
+        case KEY_RIGHT:
+            if (x < 40)
+                x += 5;
+            if (x == 45)
+                x = 40;
+            break;
+
+        default:
+            if (isalpha(c))
+            {
+                printw("%c", c);
+            }
+            break;
+        }
+
+        move(y, x);
+        refresh();
     }
 
-    keyBoardMoving(&y, &x);
-    
-    shutdown(conn_fd, SHUT_RDWR);
     endwin();
-
-    return EXIT_SUCCESS ;
+    return 0;
 }
