@@ -4,58 +4,45 @@
 #include <ncurses.h>
 #include <string.h>
 
-void reversiSetting(int y1, int x1, int y2, int x2, int row, int col)
-{
-    int w = x2 - x1;
-    int h = y2 - y1;
-
-    mvprintw(y1 / 2-1, x1 / 2+3, "**** WELCOME TO REVERSI ****");
-    mvprintw(y1 / 2, x1 / 2+3, "opponent has been matched");
-    mvprintw(y1 / 2+1, x1 / 2+3, "You : black stone");
-    mvprintw(y1 / 2+2, x1 / 2+3, "Opponent : white stone");
-
-    mvhline(y1, x1, ACS_HLINE, w); // first horizontal line
-    mvhline(y2, x1, ACS_HLINE, w); // second horizontal line
-
-    mvvline(y1, x1, ACS_VLINE, h); // first vertical line
-    mvvline(y1, x2, ACS_VLINE, h); // second vertical line
-
-    for (int i = 1; i <= 8; i++)
-    {
-        mvhline(y1 + (h / 8 * i), x1, ACS_HLINE, w);
-        mvaddch(y1 + (h / 8 * i), x1, ACS_LTEE);
-        mvaddch(y1 + (h / 8 * i), x2, ACS_RTEE);
-    }
-
-    for (int i = 1; i <= 8; i++)
-    {
-        mvvline(y1, x1 + (w / 8 * i), ACS_VLINE, h);
-        mvaddch(y1, x1 + (w / 8 * i), ACS_TTEE);
-        mvaddch(y2, x1 + (w / 8 * i), ACS_BTEE);
-    }
-
-    mvaddch(y1, x1, ACS_ULCORNER);
-    mvaddch(y2, x1, ACS_LLCORNER);
-    mvaddch(y1, x2, ACS_URCORNER);
-    mvaddch(y2, x2, ACS_LRCORNER);
-}
-
-int main()
+int main(int argc, char ** argv)
 {
     int row, col;
-    char widerWindow[] = "You need wider window";
-    char heigherWindow[] = "You need heigher window";
+    int mode=0; // client : mode 1, server : mode 2
+
+    struct sockaddr_in serv_addr; 
+	int sock_fd ;
+	int s, len ;
+	char buffer[1024] = {0}; 
+	char * data ;
+    
+    // client
+    if (argc == 3) {
+        mode = 1;
+        int conn_fd = connect_ipaddr_port(argv[1], atoi(argv[2])) ;
+        // chatC(conn_fd) ;
+	}
+
+    // server
+    if (argc == 2) {
+        mode = 2;
+		int conn_fd = listen_at_port(atoi(argv[1])) ;
+		// chatS(conn_fd) ;
+	}
+
+    if (argc < 2 || argc > 3){
+        fprintf(stderr, "Wrong number of arguments\n") ;
+        fprintf(stderr, "Usage:\n\t./reversi [IP addr] [Port num]\n");
+        fprintf(stderr, "\t./reversi [Port num]\n");
+        exit(EXIT_FAILURE) ;
+    }
+
 
     initscr();
     clear();
 
     getmaxyx(stdscr, row, col);
 
-    if(row < 28) mvprintw(row / 2, (col - strlen(heigherWindow)) / 2, "%s", heigherWindow);
-
-    else if(col < 69) mvprintw(row / 2, (col - strlen(widerWindow)) / 2, "%s", widerWindow);
-
-    else reversiSetting(5, 5, 21, 45, row, col);
+    checkSize(int row, int col);
 
     noecho();
     cbreak();
@@ -68,50 +55,9 @@ int main()
 
     refresh();
 
-    int c;
-    while ((c = getch()) != KEY_F(1))
-    {
-        switch (c)
-        {
-        case KEY_UP:
-            if (y > 6)
-                y -= 2;
-            if (y == 4)
-                y = 6;
-            break;
+    keyBoardMoving(&y, &x);
 
-        case KEY_DOWN:
-            if (y < 22)
-                y += 2;
-            if (y == 22)
-                y = 20;
-            break;
-
-        case KEY_LEFT:
-            if (x > 7)
-                x -= 5;
-            if (x == 12)
-                x = 7;
-            break;
-
-        case KEY_RIGHT:
-            if (x < 40)
-                x += 5;
-            if (x == 45)
-                x = 40;
-            break;
-
-        default:
-            if (isalpha(c))
-            {
-                printw("%c", c);
-            }
-            break;
-        }
-
-        move(y, x);
-        refresh();
-    }
+    shutdown(conn_fd, SHUT_RDWR) ;
 
     endwin();
     return 0;
