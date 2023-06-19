@@ -67,37 +67,23 @@ void chatS(int conn_fd, int x, int y)
 	} while (strcmp(buf, "quit()") != 0) ;
 }
 
-int changeCharToInt(char c){
-    switch (c){
-        case 'A':
-            return 0;
-            break;
-        case 'B':
-            return 1;
-            break;
-        case 'C':
-            return 2;
-            break;
-        case 'D':
-            return 3;
-            break;
-        case 'E':
-            return 4;
-            break;
-        case 'F':
-            return 5;
-            break;
-        case 'G':
-            return 6;
-            break;
-        case 'H':
-            return 7;
-            break;
+void sSend(int x, int y){
+	int sendingXY = x*10 + y;
+	char buf[100];
 
-        default:
-            return -1;
-            break;
-    }
+	itoa(sendingXY, buf, 10);
+	send(e_conn_fd, buf, strlen(buf), 0);
 }
 
+void sReceive(){
+	int s;
+	int XYfromS;
+	int x, y;
+	char buf[100];
 
+	while ((s = recv(e_conn_fd, buf, 1024, 0)) == 0) curs_set(0);
+	buf[s] = '\0';
+	XYfromS = atoi(buf);
+
+	board[XYfromS/10][XYfromS%10] = 2; // one : server
+}
