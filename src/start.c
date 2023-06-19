@@ -10,9 +10,14 @@ void checkSize(int row, int col){
 }
 
 void initial(){
+    memset(board, 2, sizeof(board));
     // board[col][row]
-    board[3][3] = 2; // client
-    board[4][3] = 1; // server
-    board[3][4] = 1;
-    board[4][4] = 2;
+    board[3][3] = 1; // client
+    board[4][3] = 0; // server
+    board[3][4] = 0;
+    board[4][4] = 1;
+    scores[0] = 2;
+    scores[1] = 2;
+
+    mark_playable_positions();
 }

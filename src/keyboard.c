@@ -47,17 +47,8 @@ void keyBoardMoving(int *y, int *x, int mode){
     bx = *x;
     by = *y;
 
-    if(mode == 1) // client
-    {
-        cSend((bx-7)/5, (by-6) / 2);
-        board[(bx-7)/5][(by-6) / 2] = 2;
-        // mvprintw(by, bx, "%d %d", by, bx);
-    }
+    if(mode == 1) cSend((bx-7)/5, (by-6) / 2);
 
-    if(mode == 2) // server
-    {
-        sSend((bx-7)/5, (by-6) / 2);
-        board[(bx-7)/5][(by-6) / 2] = 1;
-        // mvprintw(by, bx, "x", by , bx);
-    }
+    if(mode == 0) sSend((bx-7)/5, (by-6) / 2);
+    board[(bx-7)/5][(by-6) / 2] = mode;
 }

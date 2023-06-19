@@ -72,5 +72,5 @@ void cReceive(){
 	buf[s] = '\0';
 	XYfromS = atoi(buf);
 
-	board[XYfromS/10][XYfromS%10] = 1; // one : server
+	board[XYfromS/10][XYfromS%10] = 0; // one : server
 }

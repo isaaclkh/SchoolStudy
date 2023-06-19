@@ -1,6 +1,6 @@
 
-reversi : table.o reversi.o client.o server.o start.o keyboard.o itoaFunc.o
-	gcc -o reversi table.o reversi.o client.o server.o start.o keyboard.o itoaFunc.o -lncurses
+reversi : table.o reversi.o client.o server.o start.o keyboard.o itoaFunc.o reversiFunc.o
+	gcc -o reversi table.o reversi.o client.o server.o start.o keyboard.o itoaFunc.o reversiFunc.o -lncurses
 
 reversi.o : reversi.c
 	gcc -c -o reversi.o reversi.c -lncurses
@@ -22,6 +22,9 @@ server.o : src/server.c
 
 itoaFunc.o : function/itoaFunc.c
 	gcc -c -o itoaFunc.o function/itoaFunc.c
+
+reversiFunc.o : function/reversiFunc.c
+	gcc -c -o reversiFunc.o function/reversiFunc.c
 
 
 clean:
