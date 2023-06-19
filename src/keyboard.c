@@ -1,7 +1,8 @@
 #include "../reversi.h"
 
-void keyBoardMoving(int *y, int *x){
+void keyBoardMoving(int *y, int *x, int mode){
     int c;
+    int bx, by;
 
     while ((c = getch()) != '\n')
     {
@@ -41,5 +42,22 @@ void keyBoardMoving(int *y, int *x){
 
         move(*y, *x);
         refresh();
+    }
+
+    bx = *x;
+    by = *y;
+
+    if(mode == 1) // client
+    {
+        // chatC
+        board[(bx-7)/5][(by-6) / 2] = 1;
+        // mvprintw(by, bx, "%d %d", by, bx);
+    }
+
+    if(mode == 2) // server
+    {
+        // chatS
+        board[(bx-7)/5][(by-6) / 2] = 2;
+        // mvprintw(by, bx, "x", by , bx);
     }
 }

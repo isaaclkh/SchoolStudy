@@ -41,11 +41,38 @@ void reversiSetting(int y1, int x1, int y2, int x2, int row, int col)
     mvaddch(y2, x2, ACS_LRCORNER);
 }
 
+void rect(int y1, int x1, int y2, int x2){
+    int w = x2 - x1;
+    int h = y2 - y1;
+    
+    mvhline(y1, x1, ACS_HLINE, w); // first horizontal line
+    mvhline(y2, x1, ACS_HLINE, w); // second horizontal line
+
+    mvvline(y1, x1, ACS_VLINE, h); // first vertical line
+    mvvline(y1, x2, ACS_VLINE, h); // second vertical line
+
+    mvaddch(y1, x1, ACS_ULCORNER);
+    mvaddch(y2, x1, ACS_LLCORNER);
+    mvaddch(y1, x2, ACS_URCORNER);
+    mvaddch(y2, x2, ACS_LRCORNER);
+}
+
 void drawing(){
+    start_color();
+    init_pair(1, COLOR_BLUE, COLOR_BLUE);
+    init_pair(2, COLOR_RED, COLOR_RED);
     for(int i=0; i<8; i++){
         for(int j=0; j<8; j++){
-            if(board[i][j] == 1); // white rect
-            if(board[i][j] == 2); // black rect
+            if(board[i][j] == 1){ // white rect : blue
+                attron(COLOR_PAIR(1));
+                rect(6 + (j*2), 7 + (i*5), 6+(j*2), 7 + (i*5));
+                attroff(COLOR_PAIR(1));
+            }
+            if(board[i][j] == 2){ // black rect : red
+                attron(COLOR_PAIR(2));
+                rect(6 + (j*2), 7 + (i*5), 6+(j*2), 7 + (i*5));
+                attroff(COLOR_PAIR(2));
+            } 
         }
     }
 }

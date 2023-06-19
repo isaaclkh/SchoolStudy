@@ -8,7 +8,7 @@ int main(int argc, char ** argv)
 {
     int row, col;
     int mode=0; // client : mode 1, server : mode 2
-    int end=0;
+    int end=1;
 
     struct sockaddr_in serv_addr; 
 	int sock_fd ;
@@ -63,9 +63,9 @@ int main(int argc, char ** argv)
     while(end){
         drawing();
 
-        if(mode==2) chatS(conn_fd);
-        keyBoardMoving(&y, &x);
-        if(mode==1) chatC(conn_fd);
+        //if(mode==2) chatS(conn_fd);
+        keyBoardMoving(&y, &x, mode);
+        //if(mode==1) chatC(conn_fd);
         
     }
     

@@ -47,7 +47,7 @@ void chatS(int conn_fd, int x, int y)
 	do {
 		int s ;
 		
-		while ( (s = recv(conn_fd, buf, 255, 0)) == 0 ) ;
+		while ( (s = recv(conn_fd, buf, 255, 0)) == 0 ) curs_set(0);
 		if (s == -1)
 			break ;
 
@@ -69,28 +69,28 @@ void chatS(int conn_fd, int x, int y)
 
 int changeCharToInt(char c){
     switch (c){
-        case A:
+        case 'A':
             return 0;
             break;
-        case B:
+        case 'B':
             return 1;
             break;
-        case C:
+        case 'C':
             return 2;
             break;
-        case D:
+        case 'D':
             return 3;
             break;
-        case E:
+        case 'E':
             return 4;
             break;
-        case F:
+        case 'F':
             return 5;
             break;
-        case G:
+        case 'G':
             return 6;
             break;
-        case H:
+        case 'H':
             return 7;
             break;
 
