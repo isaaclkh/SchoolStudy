@@ -13,7 +13,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-extern int board[8][8];
+extern int board[8][8]; // board[col][row]
 
 
 // table
@@ -34,5 +34,5 @@ void checkSize(int row, int col);
 void initial();
 
 // keyboard
-void keyBoardMoving(int *y, int *x);
+void keyBoardMoving(int *y, int *x, int mode);
 

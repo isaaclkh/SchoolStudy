@@ -45,11 +45,11 @@ void chatC (int conn_fd, int x, int y)
 		send(conn_fd, buf, strlen(buf), 0);
 
 		int s ;
-		while ((s = recv(conn_fd, buf, 1024, 0)) == 0) ;
+		while ((s = recv(conn_fd, buf, 1024, 0)) == 0) curs_set(0);
 		if (s == -1)
 			break ;
 		buf[s] = '\0' ;
 
 		printf(">%s\n", buf) ;
 	} while (strcmp(buf, "quit()") != 0) ;
-}å
+}
