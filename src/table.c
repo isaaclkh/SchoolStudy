@@ -63,16 +63,19 @@ void drawing(){
     init_pair(2, COLOR_RED, COLOR_RED);
     for(int i=0; i<8; i++){
         for(int j=0; j<8; j++){
-            if(board[i][j] == 1){ // white rect : blue = server
+            if(board[i][j] == 0){ // white rect : blue = server
                 attron(COLOR_PAIR(1));
                 rect(6 + (j*2), 7 + (i*5), 6+(j*2), 7 + (i*5));
                 attroff(COLOR_PAIR(1));
             }
-            if(board[i][j] == 2){ // black rect : red = client
+            if(board[i][j] == 1){ // black rect : red = client
                 attron(COLOR_PAIR(2));
                 rect(6 + (j*2), 7 + (i*5), 6+(j*2), 7 + (i*5));
                 attroff(COLOR_PAIR(2));
-            } 
+            }
+            if(board[i][j] == 3){
+                mvprintw(6 + (j*2), 7 + (i*5), ".");
+            }
         }
     }
 }

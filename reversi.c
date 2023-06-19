@@ -3,13 +3,14 @@
 // board[col][row]
 int board[8][8];
 // black(client) : 2, white(server) : 1
-
 int e_conn_fd;
+int current_player;
+int playable_direction[8][8][8];
+int scores[2];
 
 int main(int argc, char ** argv)
 {
     int row, col;
-    int mode=0; // client : mode 1, server : mode 2
     int end=1;
 
     struct sockaddr_in serv_addr; 
@@ -21,14 +22,14 @@ int main(int argc, char ** argv)
     
     // client
     if (argc == 3) {
-        mode = 1;
+        current_player = 1;
         e_conn_fd = connect_ipaddr_port(argv[1], atoi(argv[2])) ;
         // chatC(conn_fd) ;
 	}
 
     // server
     if (argc == 2) {
-        mode = 2;
+        current_player = 0;
 		e_conn_fd = listen_at_port(atoi(argv[1])) ;
 		// chatS(conn_fd) ;
 	}
@@ -63,24 +64,30 @@ int main(int argc, char ** argv)
     refresh();
 
     while(end){
+        mark_playable_positions();
         drawing();
 
-        if(mode==2){
+        if(current_player==0){
             sReceive();
+            mark_playable_positions();
             drawing();
         }
-        keyBoardMoving(&y, &x, mode);
-        //if(mode==1) chatC(conn_fd);
+        
+        keyBoardMoving(&y, &x, current_player);
 
-        if(mode==1){
+        if(current_player==1){
             cReceive();
+            mark_playable_positions();
             drawing();
         }
+
+        end = checkEnd();
         
     }
     
 
     shutdown(e_conn_fd, SHUT_RDWR) ;
+    display_winner();
 
     endwin();
     return 0;
