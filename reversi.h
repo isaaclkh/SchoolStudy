@@ -14,6 +14,7 @@
 #include <sys/types.h>
 
 extern int board[8][8]; // board[col][row]
+extern int e_conn_fd;
 
 
 // table
@@ -22,12 +23,13 @@ void drawing();
 
 // client
 int connect_ipaddr_port (const char * ip, int port);
-void chatC(int conn_fd, int x, int y);
+void cSend(int x, int y);
+void cReceive();
 
 // server
 int listen_at_port (int portnum);
-void chatS(int conn_fd, int x, int y);
-int changeCharToInt(char c);
+void sSend(int x, int y);
+void sReceive();
 
 // start
 void checkSize(int row, int col);
@@ -35,4 +37,7 @@ void initial();
 
 // keyboard
 void keyBoardMoving(int *y, int *x, int mode);
+
+// function
+char * itoa(int value, char* buffer, int base);
 

@@ -53,3 +53,24 @@ void chatC (int conn_fd, int x, int y)
 		printf(">%s\n", buf) ;
 	} while (strcmp(buf, "quit()") != 0) ;
 }
+
+void cSend(int x, int y){
+	int sendingXY = x*10 + y;
+	char buf[100];
+
+	itoa(sendingXY, buf, 10);
+	send(e_conn_fd, buf, strlen(buf), 0);
+}
+
+void cReceive(){
+	int s;
+	int XYfromS;
+	int x, y;
+	char buf[100];
+
+	while ((s = recv(e_conn_fd, buf, 1024, 0)) == 0) curs_set(0);
+	buf[s] = '\0';
+	XYfromS = atoi(buf);
+
+	board[XYfromS/10][XYfromS%10] = 1; // one : server
+}

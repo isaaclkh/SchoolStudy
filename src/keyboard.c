@@ -49,15 +49,15 @@ void keyBoardMoving(int *y, int *x, int mode){
 
     if(mode == 1) // client
     {
-        // chatC
-        board[(bx-7)/5][(by-6) / 2] = 1;
+        cSend((bx-7)/5, (by-6) / 2);
+        board[(bx-7)/5][(by-6) / 2] = 2;
         // mvprintw(by, bx, "%d %d", by, bx);
     }
 
     if(mode == 2) // server
     {
-        // chatS
-        board[(bx-7)/5][(by-6) / 2] = 2;
+        sSend((bx-7)/5, (by-6) / 2);
+        board[(bx-7)/5][(by-6) / 2] = 1;
         // mvprintw(by, bx, "x", by , bx);
     }
 }
