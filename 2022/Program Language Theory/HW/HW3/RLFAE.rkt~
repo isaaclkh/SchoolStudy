@@ -1,0 +1,104 @@
+#lang plai
+
+;[contract] :
+;[purpose] :
+(define-type RLFAE
+  [num (n number?)]
+  [add (lhs RLFAE?)(rhs RLFAE?)]
+  [sub (lhs RLFAE?)(rhs RLFAE?)]
+  [id (name symbol?)]
+  [fun (param symbol?)(body RLFAE?)]
+  [app (ftn RLFAE?)(arg RLFAE?)]
+  [eq (l RLFAE?)(r RLFAE?)]
+  [ifexpr (expr RLFAE?)(then RLFAE?)(else RLFAE?)]
+  [orop (l RLFAE?)(r RLFAE?)]
+  )
+
+(define (parse sexp)
+  (match sexp
+    [(? number?)(num sexp)]
+    [(list '+ l r)(add (parse l)(parse r))]
+    [(list '- l r)(sub (parse l)(parse r))]
+    [(list 'with (list i v) e) (with i (parse v)(parse e))]
+    [(? symbol?)(id sexp)]
+    [(list 'fun (list p) b)(fun p (parse b))]
+    [(list f a)(app (parse f)(parse a))]
+    [else (error 'parse "bad syntax : ~a" sexp)]
+    [(list '= l r)(eq (parse l)(parse r))]
+    [(list 'if expr then else) (ifexpr (parse expr) (parse then) (parse else))]
+    [(list 'or l r) (orop (parse l) (parse r))]
+    ))
+
+(define-type DefrdSub
+  [mtSub]
+  [aSub (name symbol?)(value RLFAE-Value?)(ds DefrdSub?)]
+  [aRecSub (name symbol?)
+           (vlaue-box (box/c RLFAE-Value?))
+           (ds DefrdSub?)])
+
+(define-type RLFAE-Value
+  [numV (n number?)]
+  [closureV (param symbol?)
+            (body RLFAE?)
+            (ds DefrdSub?)]
+  [exprV (expr RLFAE?)(ds DefrdSub?)
+         (value (box/c (or/c false RLFAE-Value?)))])
+
+(define (strict v)
+  (type-case RLFAE-Value v
+    [exprV (expr ds v-box)
+           (if (not (unbox v-box))
+               (local [(define v (strict (interp expr ds)))]
+                 (begin (set-box! v-box v)) v))
+           (unbox v-box)]
+    [else v]))
+
+(define (num-op op x y)
+  (lambda (x y)(numV (op (numV-n (strict x))(numV-n (strict y))))))
+
+(define (op x y)
+  (lambda (x y)(eq? (numV-n (strict x)) (numV-n (strict y)) )))
+
+(define (num+ x y) (num-op + x y))
+(define (num- x y) (num-op - x y))
+
+(define (lookup name ds)
+  (type-case DefrdSub ds
+    [mtSub() (error 'lookup "free identifier")]
+    [aSub (i v saved)(if (symbol=? i name)
+                         v (lookup name saved))]))
+
+(define (interp lfae ds)
+  (type-case RLFAE lfae
+    [num (n) (numV n)]
+    [add (l r) (num+ (interp l ds)(interp r ds))]
+    [sub (l r) (num- (interp l ds)(interp r ds))]
+    [id (name) (lookup name ds)]
+    [fun (param body-expr)(closureV param body-expr ds)]
+    [app (f a) (local [(define f-val (strict(interp f ds)))
+                       (define a-val (exprV a ds (box #f)))]
+                 (interp (closureV-body f-val)
+                         (aSub (closureV-param f-val)
+                               a-val
+                               (closureV-ds f-val))))]
+    [eq (l r) (op (interp l ds)(interp r ds))]
+    [ifexp (test-expr then-expr else-expr)
+           (if (interp test-expr ds)
+           (interp then-expr ds)
+           (interp else-expr ds))]
+    ))
+
+(interp (parse '{with {mk-rec {fun {body-proc}
+                                 {with {fX {fun {fY}
+                                                         {with {f {fun {x}
+                                                                       {{fY fY} x}}}
+                                                                       {body-proc f}}}}
+                                           {fX fX}}}}
+           {with {fac {mk-rec
+                                           {fun {fac}
+                                                   ; Exactly like original fac
+                                                   {fun {n}
+                                                                 {if {= n 0}
+                                                                        1
+                                                                         {* n {fac {- n 1}}}}}}}}
+                                    {fac 10}}})(mtSub))

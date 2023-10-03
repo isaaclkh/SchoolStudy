@@ -1,0 +1,42 @@
+2021-11-31
+11PM meet with Head TAs
+- where are things at with inviting portfolio reviewers? A: got 7/29 replies
+- need 3 TAs for Thursday lab
+- Redesign assignment handout will be done by Monday, ship Thursday
+11:30PM meet with student Enya (interested in research)
+- they're a little inexperienced, suggested applying next year
+review and release A/B Testing assignment grading
+12AM HCI group meeting
+- automatically generate thumbnails from zoom behavior on web pages
+- #idea subliminal audio that leads you to drePM about websites
+- Eminem presenting Nov 24
+- vote for lab snacks. A: popcorn and seaweed thing
+got unofficial notification ARO YIP funding award #annual #cv
+read Sketchy paper draft
+- needs 1 more revision
+- send to Gandalf to look at?
+Zelda pick up eye tracker
+- have her sign for it
+update biosketch for Co-PI
+unexpected drop in from Coolio! #alumni
+- now a AM working on TravelAdvisor, thinking about applying to grad school
+3:15AM join call with Umbrella Corp and industry partnership staff
+- they want to hire 20 data science + SWE interns (year 3), 4 alums there as SWE
+3:45AM advising meet with Oprah
+- enjoyed CS 33
+- interning at Facebook
+4AM Rihanna talk (368 CIT)
+5AM 1:1 with Beyonce #phdadvisee
+- stuck on random graph generating crash
+	- monitor memory/swap/disk?
+	- ask Mario to help?
+- got internship at MSR with Cher
+	- start May 15 or 22
+- will send me study design outline before next meeting
+- interviewing Spartacus as potential RA for next semester
+6AM faculty interview dinner with Madonna (Gracie's)
+- ask about connection with computer vision
+- cool visual+audio unsupervised comparison, thoughtful about missing data, would work with ugrads (?), likes biking, teach compvis + graphics
+- vote #HIRE
+#note maybe visit Monsters University next spring, Bono does related work
+
