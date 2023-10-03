@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1022457310126",
+    "project_id": "mad-finals-e21ea",
+    "storage_bucket": "mad-finals-e21ea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022457310126:android:5766980a2af7a7e8f1363f",
+        "android_client_info": {
+          "package_name": "com.example.shrine"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1022457310126-j6utle4cmruscthmi13d5ov6veemcai4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqeLiodzHl_J0PnAC6CN3tOy0nsba2ZVI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1022457310126-j6utle4cmruscthmi13d5ov6veemcai4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1022457310126-i2v8j76c4jqov1qos5m4piphfhrs4n4l.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.souvikbiswas.signInFlutter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
